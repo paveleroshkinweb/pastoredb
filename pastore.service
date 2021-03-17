@@ -1,0 +1,15 @@
+[Unit]
+Description=Pastore key-value store
+After=network.target
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pastore-server /etc/pastore/pastore.properties
+PIDFile=/run/pastore/pastore-server.pid
+EnvironmentFile=/etc/pastore/secrets.env
+Restart=always
+User=pastore
+Group=pastore

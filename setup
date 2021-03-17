@@ -1,0 +1,16 @@
+#!/bin/bash
+
+groupadd -r pastore
+useradd -r -s /sbin/nologin -g pastore pastore
+
+cp pastore.service /etc/systemd/system/pastore.service
+chown pastore:pastore /etc/systemd/system/pastore.service
+
+cp pastore-server /usr/bin/pastore-server
+chmod +x /usr/bin/pastore-server
+chown pastore:pastore /usr/bin/pastore-server
+
+mkdir /etc/pastore
+cp pastore.properties /etc/pastore/pastore.properties
+cp secrets.env /etc/pastore/secrets.env
+chown -R pastore:pastore /etc/pastore

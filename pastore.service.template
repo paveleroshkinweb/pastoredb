@@ -7,8 +7,8 @@ WantedBy=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/pastore-server /etc/pastore/pastore.properties
-PIDFile=/run/pastore/pastore-server.pid
+WorkingDirectory={WorkingDirectory}
+ExecStart=/bin/java -jar pastore-1.0-SNAPSHOT.jar $FILE_PATH
 EnvironmentFile=/etc/pastore/secrets.env
 Restart=always
 User=pastore

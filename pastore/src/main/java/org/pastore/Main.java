@@ -2,17 +2,18 @@ package org.pastore;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import com.google.gson.Gson;
+
 
 public class Main {
 
     public static void main(String args[]){
-        // Entry point
+        // Test code
         while (true) {
             try {
-//                BufferedWriter write = new BufferedWriter(new FileWriter(args[0], true));
-//                write.write(args[0]);
+                Gson gson = new Gson();
                 BufferedWriter write = new BufferedWriter(new FileWriter("/home/pavel/temp", true));
-                write.write("Something");
+                write.write("Something" + gson.htmlSafe());
                 write.flush();
                 Thread.sleep(2000);
             } catch (Exception e) {}

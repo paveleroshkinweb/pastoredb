@@ -1,8 +1,53 @@
 #!/bin/bash
 
-systemctl stop pastore.service
+# Stop pastore service if it's running
+systemctl stop pastore.service >> /dev/null 2>&1
 
-userdel pastore
+# Remove pastore user
+if id -u "pastore" > /dev/null 2>&1; then
+    userdel pastore
+    if test $? -eq 0; then
+        echo "pastore user successfully removed"
+    else
+        echo "can't delete pastore user, check permissions"
+        exit 1
+    fi
+else
+    echo "pastore user is no longer exist"
+    # Remove pastore group
+    if getent group "pastore" > /dev/null 2>&1; then
+        groupdel pastore
+        if test $? -eq 0; then
+            echo "pastore group successfully removed"
+        else
+            echo "can't delete pastore group, check permissions"
+            exit 1
+        fi
+    else
+        echo "pastore group is no longer exist"
+    fi
+fi
 
-rm /etc/systemd/system/pastore.service
-rm -r /etc/pastore
+# Remove service file from systemd
+if [ -f "/etc/systemd/system/pastore.service" ]; then
+    rm /etc/systemd/system/pastore.service
+    if test $? -eq 0; then
+        echo "/etc/systemd/system/pastore.service successfully removed"
+    else
+        echo "can't delete /etc/systemd/system/pastore.service, check permissions"
+        exit 1
+    fi
+fi
+
+# Remove /etc/pastore
+if [ -d "/etc/pastore" ]; then
+    rm -r /etc/pastore
+    if test $? -eq 0; then
+        echo "/etc/pastore successfully removed"
+    else
+        echo "can't delete /etc/pastore, check permissions"
+        exit 1
+    fi
+fi
+
+echo "pastore successfully uninstalled!!!"

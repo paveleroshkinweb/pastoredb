@@ -13,6 +13,29 @@
   alias status-pastore='sudo systemctl status pastore.service'
   alias restart-pastore='sudo systemctl restart pastore.service'
   </pre></code></li>
-  <li>Now you can run pastore with <pre><code>start-pastore</pre></code> and check the status with <pre><code>status-pastore</pre></code>if everything went good you should be able to see a successfull message</li>
-  <li>Note: if you want to undone all those things you can run <pre><code>sudo ./unsetup</pre></code>it will remove pastore.service from system.d, pastore user and group, /etc/pastore folder.</li>
+  <li>Now you can run pastore with <pre><code>start-pastore</pre></code>if everything went well you should be able to see a successfull message</li>
+  <li>Note: if you want to undone all those things you can run <pre><code>sudo ./unsetup</pre></code>it will remove pastore.service from systemd, pastore user and group, /etc/pastore folder, but it will not remove a jar file under the folder which you used in build command</li>
+  <li>if you want to move the jar file in another folder you need to
+    <ul>
+      <li>stop pastore service via<pre><code>stop-pastore</pre></code>
+      <li>move the jar file in whatever folder you want</li>
+      <li>change WorkingDirectory property in /etc/systemd/system/pastore.service on a new folder</li>
+      <li>start pastore service via<pre><code>start-pastore</pre></code></li>
+    </ul>
+  </li>
+  <li>if you want to change the code base you can do it but then you have to rebuild a project
+    <ul>
+      <li>stop pastore service via<pre><code>stop-pastore</pre></code></li>
+      <li>run rebuild script with a folder where pastore-1.0.jar located<pre><code>sudo ./rebuild /path/to/jar</pre></code></li>
+      <li>start pastore service via<pre><code>start-pastore</pre></code></li>
+    </ul>
+    Note: this command will remove previous pastore-1.0.jar, also this command makes pastore user as folder owner.Folder which you use should contain only pastore build.
+  </li>
+  <li>if you need to change the config or secrets
+    <ul>
+      <li>go to /etc/pastore/</li>
+      <li>change whatever you need</li>
+      <li>restart pastore service via <pre><code>restart-pastore</pre></code></li>
+    </ul>
+  </li>
 </ol>

@@ -50,4 +50,26 @@ if [ -d "/etc/pastore" ]; then
     fi
 fi
 
+# Remove /var/lib/pastore
+if [ -d "/var/lib/pastore" ]; then
+    rm -r /var/lib/pastore
+    if test $? -eq 0; then
+        echo "/var/lib/pastore successfully removed"
+    else
+        echo "can't delete /var/lib/pastore, check permissions"
+        exit 1
+    fi
+fi
+
+# Remove /var/log/pastore
+if [ -d "/var/log/pastore" ]; then
+    rm -r /var/log/pastore
+    if test $? -eq 0; then
+        echo "/var/log/pastore successfully removed"
+    else
+        echo "can't delete /var/log/pastore, check permissions"
+        exit 1
+    fi
+fi
+
 echo "pastore successfully uninstalled!!!"

@@ -84,4 +84,31 @@ else
     exit 1
 fi
 
+# Create /var/lib/pastore
+if [ ! -d "/var/lib/pastore" ]; then
+    mkdir /var/lib/pastore
+    touch /var/lib/pastore/pastore-dump.pdb
+    touch /var/lib/pastore/pastore-history.phist
+    chown -R pastore:pastore /var/lib/pastore
+    if test $? -eq 0; then
+        echo "/var/lib/pastore created!"
+    else
+        echo "can't create /var/lib/pastore"
+        exit 1
+    fi
+fi
+
+# Create /var/log/pastore
+if [ ! -d "/var/log/pastore" ]; then
+    mkdir /var/log/pastore
+    touch /var/log/pastore/pastore.log
+    chown -R pastore:pastore /var/log/pastore
+    if test $? -eq 0; then
+        echo "/var/log/pastore created!"
+    else
+        echo "can't create /var/log/pastore"
+        exit 1
+    fi
+fi
+
 echo "setup successfully passed!!"

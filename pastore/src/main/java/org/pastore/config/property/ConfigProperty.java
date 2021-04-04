@@ -26,9 +26,6 @@ public enum ConfigProperty {
         return this.propertyName;
     }
 
-
-
-//    SERVER_TYPE("server-type", ServerType.UNENCRYPTED),
 //    MAX_CLIENTS("maxclients", 1500),
 //    DUMPFILE("dumpfile", "/var/lib/pastore/pastore-dump.pdb"),
 //    HISTORYFILE("historyfile", "/var/lib/pastore/pastore-history.phist"),
@@ -37,7 +34,6 @@ public enum ConfigProperty {
 //    PASSWORD_PROTECTED("password-protected", false),
 //    TIMEOUT("timeout", 0),
 //    TCP_BACKLOG("tcp-backlog", 500),
-//    LOG_LEVEL("loglevel", Level.INFO),
 //    DATABASES("databases", 10),
 //    SAVE("save", 600);
 }

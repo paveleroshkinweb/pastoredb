@@ -1,5 +1,6 @@
 package org.pastore.config.property;
 
+import org.pastore.config.ConfigLoader;
 import org.pastore.config.transform.ITransform;
 import org.pastore.config.exception.InvalidConfigPropertyException;
 
@@ -24,9 +25,9 @@ public class Property<T> {
         return cachedValue;
     }
 
-    public Property(ConfigProperty configProperty, String plainValue, T defaultValue, ITransform<T> transformator) {
+    public Property(ConfigProperty configProperty, T defaultValue, ITransform<T> transformator) {
         this.configProperty = configProperty;
-        this.plainValue = plainValue;
+        this.plainValue = ConfigLoader.getProperty(configProperty.getPropertyName());
         this.defaultValue = defaultValue;
         this.transformator = transformator;
     }

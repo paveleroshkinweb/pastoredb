@@ -14,8 +14,7 @@ public class LogFileTransform implements ITransform<String> {
         FSHelper fsHelper = new FSHelper(logfile);
         if (fsHelper.createIfNotExist()) {
             return logfile;
-        } else {
-            throw new InvalidConfigPropertyException(property);
         }
+        throw new InvalidConfigPropertyException(property);
     }
 }

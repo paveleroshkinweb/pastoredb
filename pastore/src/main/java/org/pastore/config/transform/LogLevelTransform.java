@@ -1,21 +1,21 @@
 package org.pastore.config.transform;
 
-import org.apache.log4j.Level;
 import org.pastore.config.exception.InvalidConfigPropertyException;
 import org.pastore.config.property.ConfigProperty;
-import org.pastore.config.property.LogLevelProperty;
+import org.pastore.logging.LogLevel;
 
 
-public class LogLevelTransform implements ITransform<Level> {
+public class LogLevelTransform implements ITransform<LogLevel> {
 
     @Override
-    public Level transform(ConfigProperty property, String plainValue, Level defaultValue) throws InvalidConfigPropertyException {
+    public LogLevel transform(ConfigProperty property, String plainValue, LogLevel defaultValue) throws InvalidConfigPropertyException {
         if (plainValue == null) {
             return defaultValue;
         }
-        if (!LogLevelProperty.levels.containsKey(plainValue)) {
+        LogLevel logLevel = LogLevel.getLevelByName(plainValue);
+        if (logLevel == null) {
             throw new InvalidConfigPropertyException(property);
         }
-        return LogLevelProperty.levels.get(plainValue);
+        return logLevel;
     }
 }

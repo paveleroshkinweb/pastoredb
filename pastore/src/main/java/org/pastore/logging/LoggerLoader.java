@@ -18,11 +18,10 @@ public class LoggerLoader {
     public static void loadLogger() throws InvalidConfigPropertyException {
         if (!loaded) {
             Property<String> logFileProperty = PropertyFactory.getProperty(ConfigProperty.LOGFILE);
-            Property<Level> levelProperty = PropertyFactory.getProperty(ConfigProperty.LOG_LEVEL);
+            Property<LogLevel> levelProperty = PropertyFactory.getProperty(ConfigProperty.LOG_LEVEL);
             String filename = logFileProperty.getValue();
-            Level logLevel = levelProperty.getValue();
+            Level logLevel = levelProperty.getValue().getLevel();
             PatternLayout layout = new PatternLayout();
-            System.out.println(filename + " " + logLevel);
             String conversionPattern = "%-7p %d [%t] %c %x - %m%n";
             layout.setConversionPattern(conversionPattern);
             FileAppender fileAppender = new FileAppender();

@@ -5,4 +5,6 @@
 **/log/
 **/target/
 **/pastore.log
+**/pastore-dump.pdb
+**/pastore-history.phist
 **/notes/

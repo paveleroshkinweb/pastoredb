@@ -64,7 +64,7 @@ public class UnencryptedServer extends Server {
                     } catch (IOException e) {
                         logger.error("Unexpected error occurred", e);
                         key.cancel();
-                        this.clients.remove(key);
+                        this.clients.remove(key.channel());
                         try {
                             key.channel().close();
                         } catch (IOException ex) {
@@ -109,7 +109,9 @@ public class UnencryptedServer extends Server {
             buffer.clear();
         }
         if (read < 0) {
+            System.out.println(this.clients);
             this.clients.remove(clientChannel);
+            System.out.println(this.clients);
             logger.info("Client " + clientChannel.getRemoteAddress() + " closed connection");
             clientChannel.close();
         } else {

@@ -5,12 +5,14 @@ import org.pastore.config.property.ConfigProperty;
 import org.pastore.config.property.Property;
 import org.pastore.config.property.PropertyFactory;
 
+import java.io.IOException;
+
 
 public class ServerFactory {
 
     private ServerFactory() {}
 
-    public static Server getServer(ServerType serverType) throws InvalidConfigPropertyException {
+    public static Server getServer(ServerType serverType) throws InvalidConfigPropertyException, IOException {
         Property<String> bindAddress = PropertyFactory.getProperty(ConfigProperty.BIND);
         Property<Integer> port = PropertyFactory.getProperty(ConfigProperty.PORT);
         Property<Integer> maxClients = PropertyFactory.getProperty(ConfigProperty.MAX_CLIENTS);

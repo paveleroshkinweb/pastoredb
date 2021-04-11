@@ -1,3 +1,41 @@
-ERROR   2021-04-04 19:54:06,671 [main] org.pastore.Main  - Cannot invoke "org.pastore.config.property.Property.getValue()" because "bindAddress" is null
-ERROR   2021-04-04 19:58:21,086 [main] org.pastore.Main  - Please make sure that + password-protected is 0 or 1
-ERROR   2021-04-04 20:00:59,679 [main] org.pastore.Main  - Please make sure that password-protected is 0 or 1
+INFO    2021-04-11 13:40:52,309 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 13:40:54,297 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:57136 connected!
+INFO    2021-04-11 13:42:30,319 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 13:42:32,830 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:57184 connected!
+INFO    2021-04-11 13:43:40,193 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 13:43:42,891 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:57228 connected!
+INFO    2021-04-11 14:33:27,399 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 14:33:32,620 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:59054 connected!
+INFO    2021-04-11 14:33:44,358 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:59060 connected!
+INFO    2021-04-11 16:19:18,177 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 16:19:20,689 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:33884 connected!
+INFO    2021-04-11 16:25:22,826 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 16:25:31,534 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:34068 connected!
+ERROR   2021-04-11 16:25:49,587 [main] org.pastore.server.UnencryptedServer  - Unexpected error occurred
+java.nio.channels.ClosedChannelException
+	at java.base/sun.nio.ch.SocketChannelImpl.ensureOpen(SocketChannelImpl.java:191)
+	at java.base/sun.nio.ch.SocketChannelImpl.getRemoteAddress(SocketChannelImpl.java:235)
+	at org.pastore.server.UnencryptedServer.readData(UnencryptedServer.java:114)
+	at org.pastore.server.UnencryptedServer.listen(UnencryptedServer.java:60)
+	at org.pastore.Main.main(Main.java:21)
+INFO    2021-04-11 16:27:34,427 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 16:27:51,793 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:34118 connected!
+INFO    2021-04-11 16:28:30,395 [main] org.pastore.server.UnencryptedServer  - Client /127.0.0.1:34118 closed connection
+INFO    2021-04-11 16:55:47,145 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 16:55:50,519 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:34894 connected!
+ERROR   2021-04-11 16:55:50,521 [main] org.pastore.Main  - class sun.nio.ch.ServerSocketChannelImpl cannot be cast to class java.nio.channels.SocketChannel (sun.nio.ch.ServerSocketChannelImpl and java.nio.channels.SocketChannel are in module java.base of loader 'bootstrap')
+INFO    2021-04-11 16:57:33,122 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 16:57:35,300 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:34948 connected!
+ERROR   2021-04-11 16:57:41,222 [main] org.pastore.Main  - Cannot invoke "org.pastore.client.Client.handle(StringBuilder)" because the return value of "java.util.Map.get(Object)" is null
+INFO    2021-04-11 17:05:59,806 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 17:06:01,510 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35176 connected!
+INFO    2021-04-11 17:06:36,441 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35196 connected!
+INFO    2021-04-11 17:07:14,665 [main] org.pastore.server.UnencryptedServer  - Client /127.0.0.1:35176 closed connection
+INFO    2021-04-11 17:08:58,881 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 17:09:14,295 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35264 connected!
+INFO    2021-04-11 17:09:17,928 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35266 connected!
+INFO    2021-04-11 17:12:10,417 [main] org.pastore.server.UnencryptedServer  - Server listens 127.0.0.1:8967
+INFO    2021-04-11 17:12:19,034 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35334 connected!
+INFO    2021-04-11 17:12:25,380 [main] org.pastore.server.UnencryptedServer  - New client /127.0.0.1:35336 connected!
+INFO    2021-04-11 17:12:54,571 [main] org.pastore.server.UnencryptedServer  - Client /127.0.0.1:35334 closed connection
+INFO    2021-04-11 17:13:02,987 [main] org.pastore.server.UnencryptedServer  - Client /127.0.0.1:35336 closed connection

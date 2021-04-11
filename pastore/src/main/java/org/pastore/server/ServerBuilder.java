@@ -3,6 +3,8 @@ package org.pastore.server;
 
 import org.pastore.utils.NotImplementedException;
 
+import java.io.IOException;
+
 public class ServerBuilder {
 
     private ServerType serverType;
@@ -126,7 +128,7 @@ public class ServerBuilder {
         return saveInterval;
     }
 
-    public Server build() throws NotImplementedException {
+    public Server build() throws NotImplementedException, IOException {
         if (this.serverType == ServerType.UNENCRYPTED) {
             return new UnencryptedServer(this);
         }

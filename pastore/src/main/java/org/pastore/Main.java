@@ -20,9 +20,9 @@ public class Main {
             try (Server server = ServerFactory.getServer(serverType.getValue())) {
                 server.listen();
             }
-        } catch (Exception exception) {
+        } catch (Exception e) {
             Logger logger = Logger.getLogger(Main.class);
-            logger.error(exception.getMessage());
+            logger.error("Exception occurred", e);
         }
     }
 }

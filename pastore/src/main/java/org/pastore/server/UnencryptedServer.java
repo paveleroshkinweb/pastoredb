@@ -6,6 +6,7 @@ import org.pastore.client.Client;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -54,6 +55,9 @@ public class UnencryptedServer extends Server {
                     SelectionKey key = iter.next();
                     iter.remove();
                     try {
+                        if (! key.isValid()) {
+                            continue;
+                        }
                         if (key.isAcceptable()) {
                             this.acceptNewClient(key);
                         } else if (key.isReadable()) {
@@ -83,7 +87,8 @@ public class UnencryptedServer extends Server {
         SocketChannel clientChannel = server.accept();
         clientChannel.configureBlocking(false);
         clientChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-        logger.info("New client " + clientChannel.getRemoteAddress() + " connected!");
+        SocketAddress newAddress = clientChannel.getRemoteAddress();
+        logger.info("New client " + newAddress + " connected!");
 
         if (this.clients.size() < this.getMaxClients()) {
             this.clients.put(clientChannel, new Client(clientChannel));
@@ -93,6 +98,7 @@ public class UnencryptedServer extends Server {
             );
             clientChannel.write(maxConnectionsMessage);
             clientChannel.close();
+            logger.info("Client " + newAddress + " disconnected!");
         }
     }
 
@@ -109,9 +115,7 @@ public class UnencryptedServer extends Server {
             buffer.clear();
         }
         if (read < 0) {
-            System.out.println(this.clients);
             this.clients.remove(clientChannel);
-            System.out.println(this.clients);
             logger.info("Client " + clientChannel.getRemoteAddress() + " closed connection");
             clientChannel.close();
         } else {

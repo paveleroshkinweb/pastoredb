@@ -1,22 +1,19 @@
 package org.pastore.server;
 
 import org.apache.log4j.Logger;
-import org.pastore.client.Client;
+import org.pastore.connection.Connection;
+import org.pastore.connection.MessageReader;
+import org.pastore.server.exception.ServerException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class UnencryptedServer extends Server {
 
@@ -28,9 +25,7 @@ public class UnencryptedServer extends Server {
 
     private ServerSocket serverSocket;
 
-    private Map<SocketChannel, Client> clients;
-
-    private static final int chunkSize = 2048;
+    private Map<SocketChannel, Connection> connections;
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
@@ -40,8 +35,8 @@ public class UnencryptedServer extends Server {
         this.serverSocket.bind(new InetSocketAddress(this.getBindAddress(), this.getPort()), this.getBacklog());
         this.channel.configureBlocking(false);
         this.selector = Selector.open();
-        this.channel.register(selector, this.channel.validOps(), null);
-        this.clients = new HashMap<>();
+        this.channel.register(selector, SelectionKey.OP_ACCEPT);
+        this.connections = new HashMap<>();
     }
 
     public void listen() {
@@ -50,30 +45,24 @@ public class UnencryptedServer extends Server {
             while (this.channel.isOpen()) {
                 this.selector.select();
                 Set<SelectionKey> selectedKeys = this.selector.selectedKeys();
-                Iterator<SelectionKey> iter = selectedKeys.iterator();
-                while (iter.hasNext()) {
-                    SelectionKey key = iter.next();
-                    iter.remove();
+                for (Iterator<SelectionKey> it = selectedKeys.iterator(); it.hasNext();) {
+                    SelectionKey key = it.next();
+                    it.remove();
                     try {
-                        if (! key.isValid()) {
-                            continue;
-                        }
-                        if (key.isAcceptable()) {
-                            this.acceptNewClient(key);
-                        } else if (key.isReadable()) {
-                            this.readData(key);
-                        } else if (key.isWritable()) {
-                            this.writeData(key);
+                        if (key.isValid()) {
+                            if (key.isAcceptable()) {
+                                this.acceptNewClient(key);
+                            } else if (key.isReadable()) {
+                                this.readData(key);
+                            } else if (key.isWritable()) {
+                                this.writeData(key);
+                            }
                         }
                     } catch (IOException e) {
-                        logger.error("Unexpected error occurred", e);
+                        logger.error("Unexpected IOException while processing key occurred", e);
                         key.cancel();
-                        this.clients.remove(key.channel());
-                        try {
-                            key.channel().close();
-                        } catch (IOException ex) {
-                            logger.error("Can't close channel!", ex);
-                        }
+                        SocketChannel channel = (SocketChannel) key.channel();
+                        this.closeConnection(channel);
                     }
                 }
             }
@@ -84,61 +73,75 @@ public class UnencryptedServer extends Server {
 
     private void acceptNewClient(SelectionKey key) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
-        SocketChannel clientChannel = server.accept();
-        clientChannel.configureBlocking(false);
-        clientChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-        SocketAddress newAddress = clientChannel.getRemoteAddress();
-        logger.info("New client " + newAddress + " connected!");
+        SocketChannel connectionChannel = server.accept();
+        connectionChannel.configureBlocking(false);
+        connectionChannel.register(key.selector(), SelectionKey.OP_READ);
+        logger.info("New client " + connectionChannel.getRemoteAddress() + " connected!");
 
-        if (this.clients.size() < this.getMaxClients()) {
-            this.clients.put(clientChannel, new Client(clientChannel));
-        } else {
-            ByteBuffer maxConnectionsMessage = ByteBuffer.wrap(
-                "Can't accept new connection due to limited connection number".getBytes(StandardCharsets.UTF_8)
-            );
-            clientChannel.write(maxConnectionsMessage);
-            clientChannel.close();
-            logger.info("Client " + newAddress + " disconnected!");
+        MessageReader messageReader = new MessageReader(connectionChannel);
+        Connection newConnection = new Connection(connectionChannel, this.selector, messageReader);
+        this.connections.put(connectionChannel, newConnection);
+
+        if (this.connections.size() > this.getMaxClients()) {
+            newConnection.setToBeClosed();
+            newConnection.setResponse("Can't accept new connection due to limited connection number");
         }
     }
 
-    private void readData(SelectionKey key) throws IOException{
-        SocketChannel clientChannel = (SocketChannel) key.channel();
-        StringBuilder command = new StringBuilder();
-        ByteBuffer buffer = ByteBuffer.allocate(chunkSize);
-        int read = 0;
-        while ((read = clientChannel.read(buffer)) > 0) {
-            buffer.flip();
-            byte[] bytes = new byte[buffer.limit()];
-            buffer.get(bytes);
-            command.append(new String(bytes));
-            buffer.clear();
-        }
-        if (read < 0) {
-            this.clients.remove(clientChannel);
-            logger.info("Client " + clientChannel.getRemoteAddress() + " closed connection");
-            clientChannel.close();
-        } else {
-            this.clients.get(clientChannel).handle(command);
+    private void readData(SelectionKey key) throws IOException {
+        SocketChannel connectionChannel = (SocketChannel) key.channel();
+        Connection connection = this.connections.get(connectionChannel);
+        MessageReader messageReader = connection.getMessageReader();
+        try {
+            String[] commands = messageReader.readCommands();
+            if (commands != null) {
+                for (String command : commands) {
+                    connection.setResponse(command);
+                }
+            }
+        } catch (ServerException e) {
+            logger.info("ServerException occurred while reading data: " + e.getMessage(), e);
+            this.closeConnection(connectionChannel);
         }
     }
 
     private void writeData(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
-        if (key.attachment() != null) {
-            ByteBuffer buffer = (ByteBuffer) key.attachment();
-            if (! buffer.hasRemaining()) {
-                buffer.rewind();
-                int value = buffer.getInt();
-                buffer.clear();
-                buffer.putInt(value + 1);
-                buffer.flip();
+        Connection connection = this.connections.get(socketChannel);
+        socketChannel.write(connection.getResponse());
+        if (! connection.getResponse().hasRemaining()) {
+            socketChannel.register(this.selector, SelectionKey.OP_READ);
+            if (connection.needToBeClosed()) {
+                this.closeConnection(socketChannel);
             }
-            socketChannel.write(buffer);
         }
     }
 
+    private void closeChannel(SocketChannel channel) {
+        if (channel.isOpen()) {
+            try {
+                SocketAddress remoteAddress = channel.getRemoteAddress();
+                channel.close();
+                logger.info("Successfully closed " + remoteAddress);
+            } catch (IOException e) {
+                logger.error("Unexpected IOException occurred while closing channel", e);
+            }
+        }
+    }
+
+    private void closeConnection(SocketChannel channel) {
+        if (this.connections.containsKey(channel)) {
+            this.connections.remove(channel);
+        }
+        this.closeChannel(channel);
+    }
+
     public void close() {
-        System.out.println("I'm out!");
+        this.connections.keySet().forEach(this::closeConnection);
+        try {
+            this.channel.close();
+        } catch (IOException e) {
+            logger.error("Unexpected IOException occurred while closing sever", e);
+        }
     }
 }

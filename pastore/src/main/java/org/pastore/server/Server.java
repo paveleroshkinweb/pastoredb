@@ -26,6 +26,8 @@ public abstract class Server implements Closeable {
 
     private int saveInterval;
 
+    private int maxMessage;
+
     public Server(ServerBuilder builder) {
         this.serverType = builder.getServerType();
         this.bindAddress = builder.getBindAddress();
@@ -85,4 +87,5 @@ public abstract class Server implements Closeable {
     public int getSaveInterval() {
         return saveInterval;
     }
+
 }

@@ -16,7 +16,6 @@ public class PropertyFactory {
             put(ConfigProperty.DUMPFILE, new DumpFileProperty());
             put(ConfigProperty.HISTORYFILE, new HistoryFileProperty());
             put(ConfigProperty.PASSWORD_PROTECTED, new PasswordProtectedProperty());
-            put(ConfigProperty.TIMEOUT, new TimeoutProperty());
             put(ConfigProperty.TCP_BACKLOG, new BacklogProperty());
             put(ConfigProperty.DATABASES, new DatabasesProperty());
             put(ConfigProperty.SAVE, new SaveIntervalProperty());

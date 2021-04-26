@@ -1,8 +1,12 @@
 package org.pastore.config.property;
 
+import org.apache.log4j.Logger;
+import org.pastore.Main;
 import org.pastore.config.ConfigLoader;
 import org.pastore.config.transform.ITransform;
 import org.pastore.config.exception.InvalidConfigPropertyException;
+import org.pastore.logging.LoggerLoader;
+
 
 public class Property<T> {
 
@@ -16,12 +20,20 @@ public class Property<T> {
 
     private T cachedValue;
 
-    public T getValue() throws InvalidConfigPropertyException {
+    public T getValue() {
         if (cachedValue != null) {
             return cachedValue;
         }
-        T result = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
-        cachedValue = result;
+        try {
+            T result = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
+            cachedValue = result;
+        } catch (InvalidConfigPropertyException e) {
+            if (LoggerLoader.isLoaded()) {
+                Logger logger = Logger.getLogger(Property.class);
+                logger.error("Exception occurred", e);
+            }
+            System.exit(1);
+        }
         return cachedValue;
     }
 

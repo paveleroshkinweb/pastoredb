@@ -13,11 +13,18 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UnencryptedServer extends Server {
 
     private static final Logger logger = Logger.getLogger(UnencryptedServer.class);
+
+    private static final int workersNumber = Runtime.getRuntime().availableProcessors();
 
     private ServerSocketChannel channel;
 
@@ -27,20 +34,22 @@ public class UnencryptedServer extends Server {
 
     private Map<SocketChannel, Connection> connections;
 
+    private final ExecutorService handlers = Executors.newFixedThreadPool(workersNumber);
+
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
         this.channel = ServerSocketChannel.open();
         this.serverSocket = this.channel.socket();
         this.serverSocket.setReuseAddress(true);
-        this.serverSocket.bind(new InetSocketAddress(this.getBindAddress(), this.getPort()), this.getBacklog());
+        this.serverSocket.bind(new InetSocketAddress(this.getBindAddress().getValue(), this.getPort().getValue()), this.getBacklog().getValue());
         this.channel.configureBlocking(false);
         this.selector = Selector.open();
         this.channel.register(selector, SelectionKey.OP_ACCEPT);
-        this.connections = new HashMap<>();
+        this.connections = new ConcurrentHashMap<>();
     }
 
     public void listen() {
-        logger.info("Server listens " + this.getBindAddress() + ":" + this.getPort());
+        logger.info("Server listens " + this.getBindAddress().getValue() + ":" + this.getPort().getValue());
         try {
             while (this.channel.isOpen()) {
                 this.selector.select();
@@ -79,12 +88,14 @@ public class UnencryptedServer extends Server {
         logger.info("New client " + connectionChannel.getRemoteAddress() + " connected!");
 
         MessageReader messageReader = new MessageReader(connectionChannel);
-        Connection newConnection = new Connection(connectionChannel, this.selector, messageReader);
+        Connection newConnection = new Connection(connectionChannel,
+                                                  this.selector,
+                                                  messageReader,
+                                                  this.isPasswordProtected());
         this.connections.put(connectionChannel, newConnection);
 
-        if (this.connections.size() > this.getMaxClients()) {
-            newConnection.setToBeClosed();
-            newConnection.setResponse("Can't accept new connection due to limited connection number");
+        if (this.connections.size() > this.getMaxClients().getValue()) {
+            newConnection.setErrorResponseAndClose("Can't accept new connection due to limited connection number");
         }
     }
 
@@ -95,8 +106,9 @@ public class UnencryptedServer extends Server {
         try {
             String[] commands = messageReader.readCommands();
             if (commands != null) {
-                for (String command : commands) {
-                    connection.setResponse(command);
+                logger.info("Recieved " + commands.length + " new commands from: " + connectionChannel.getRemoteAddress());
+                for (String plainCommand : commands) {
+                    handlers.execute(new Worker(connection, plainCommand));
                 }
             }
         } catch (ServerException e) {
@@ -108,6 +120,10 @@ public class UnencryptedServer extends Server {
     private void writeData(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
         Connection connection = this.connections.get(socketChannel);
+        if (connection.getResponse() == null) {
+            this.closeConnection(socketChannel);
+            return;
+        }
         socketChannel.write(connection.getResponse());
         if (! connection.getResponse().hasRemaining()) {
             socketChannel.register(this.selector, SelectionKey.OP_READ);

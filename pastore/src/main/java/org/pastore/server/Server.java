@@ -1,45 +1,30 @@
 package org.pastore.server;
 
+import org.pastore.config.property.*;
+
 import java.io.Closeable;
 
 public abstract class Server implements Closeable {
 
     private ServerType serverType;
 
-    private String bindAddress;
+    private BindProperty bindAddress;
 
-    private int port;
+    private PortProperty port;
 
-    private int maxClients;
+    private MaxClientsProperty maxClients;
 
-    private String dumpfile;
+    private PasswordProtectedProperty isPasswordProtected;
 
-    private String historyfile;
-
-    private boolean isPasswordProtected;
-
-    private int timeout;
-
-    private int backlog;
-
-    private int databases;
-
-    private int saveInterval;
-
-    private int maxMessage;
+    private BacklogProperty backlog;
 
     public Server(ServerBuilder builder) {
         this.serverType = builder.getServerType();
         this.bindAddress = builder.getBindAddress();
         this.port = builder.getPort();
         this.maxClients = builder.getMaxClients();
-        this.dumpfile = builder.getDumpfile();
-        this.historyfile = builder.getHistoryfile();
         this.isPasswordProtected = builder.isPasswordProtected();
-        this.timeout = builder.getTimeout();
         this.backlog = builder.getBacklog();
-        this.databases = builder.getDatabases();
-        this.saveInterval = builder.getSaveInterval();
     }
 
     public abstract void listen();
@@ -48,44 +33,24 @@ public abstract class Server implements Closeable {
         return serverType;
     }
 
-    public String getBindAddress() {
+    public BindProperty getBindAddress() {
         return bindAddress;
     }
 
-    public int getPort() {
+    public PortProperty getPort() {
         return port;
     }
 
-    public int getMaxClients() {
+    public MaxClientsProperty getMaxClients() {
         return maxClients;
     }
 
-    public String getDumpfile() {
-        return dumpfile;
-    }
-
-    public String getHistoryfile() {
-        return historyfile;
-    }
-
-    public boolean isPasswordProtected() {
+    public PasswordProtectedProperty isPasswordProtected() {
         return isPasswordProtected;
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public int getBacklog() {
+    public BacklogProperty getBacklog() {
         return backlog;
-    }
-
-    public int getDatabases() {
-        return databases;
-    }
-
-    public int getSaveInterval() {
-        return saveInterval;
     }
 
 }

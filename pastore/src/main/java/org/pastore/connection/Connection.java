@@ -1,5 +1,7 @@
 package org.pastore.connection;
 
+import org.pastore.config.property.PasswordProtectedProperty;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -19,18 +21,21 @@ public class Connection {
 
     private ByteBuffer response;
 
+    private boolean loggedIn;
+
+    private int currentDB;
+
     public Connection(final SocketChannel clientChannel,
                       final Selector selector,
-                      final MessageReader messageReader) throws IOException {
+                      final MessageReader messageReader,
+                      final PasswordProtectedProperty passwordProtectedProperty) throws IOException {
         this.clientChannel = clientChannel;
         this.messageReader = messageReader;
         this.needToBeClosed = false;
         this.selector = selector;
         this.response = null;
-    }
-
-    public void setToBeClosed() {
-        this.needToBeClosed = true;
+        this.loggedIn = ! passwordProtectedProperty.getValue();
+        this.currentDB = 0;
     }
 
     public boolean needToBeClosed() {
@@ -45,14 +50,55 @@ public class Connection {
         return messageReader;
     }
 
-    public void setResponse(String response) throws IOException{
-        this.response = ByteBuffer.wrap(response.getBytes(StandardCharsets.UTF_8));
+    private void setResponse(String response) throws IOException {
+        if (response == null) {
+            this.response = null;
+        } else {
+            this.response = ByteBuffer.wrap((response + "\n").getBytes(StandardCharsets.UTF_8));
+        }
         this.clientChannel.register(this.selector, SelectionKey.OP_WRITE);
+        this.selector.wakeup();
+    }
+
+    public void setErrorResponse(String response) throws IOException {
+        this.setResponse("-" + response);
+    }
+
+    public void setOkResponse(String response) throws IOException {
+        this.setResponse("+" + response);
+    }
+
+    public void setErrorResponseAndClose(String response) throws IOException {
+        this.needToBeClosed = true;
+        this.setErrorResponse(response);
+    }
+
+    public void setOkResponseAndClose(String response) throws IOException {
+        this.needToBeClosed = true;
+        this.setOkResponse(response);
+    }
+
+    public void closeConnection() throws IOException {
+        this.setResponse(null);
     }
 
     public ByteBuffer getResponse() {
         return this.response;
     }
 
+    public void setLoggedIn() {
+        this.loggedIn = true;
+    }
 
+    public void setCurrentDB(int currentDB) {
+        this.currentDB = currentDB;
+    }
+
+    public int getCurrentDB() {
+        return currentDB;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
 }

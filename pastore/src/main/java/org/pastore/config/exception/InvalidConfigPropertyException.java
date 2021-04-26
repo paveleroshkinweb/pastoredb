@@ -38,9 +38,6 @@ public class InvalidConfigPropertyException extends Exception {
             put(ConfigProperty.PASSWORD_PROTECTED,
                     "Please make sure that " + ConfigProperty.PASSWORD_PROTECTED.getPropertyName() +
                             " is 0 or 1");
-            put(ConfigProperty.TIMEOUT,
-                    "Please make sure that " + ConfigProperty.TIMEOUT.getPropertyName() +
-                            "is a correct positive integer");
             put(ConfigProperty.TCP_BACKLOG,
                     "Please make sure that " + ConfigProperty.TCP_BACKLOG.getPropertyName() +
                             "is a correct positive integer");

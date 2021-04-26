@@ -10,7 +10,6 @@ public enum ConfigProperty {
     BIND("bind"),
     PORT("port"),
     PASSWORD_PROTECTED("password-protected"),
-    TIMEOUT("timeout"),
     TCP_BACKLOG("tcp-backlog"),
     LOG_LEVEL("loglevel"),
     DATABASES("databases"),

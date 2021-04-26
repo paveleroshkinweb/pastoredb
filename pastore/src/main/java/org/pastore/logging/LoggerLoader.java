@@ -34,4 +34,8 @@ public class LoggerLoader {
             loaded = true;
         }
     }
+
+    public static boolean isLoaded() {
+        return loaded;
+    }
 }

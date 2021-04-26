@@ -1,4 +1,4 @@
-package org.pastore.db;
+package org.pastore.db.value;
 
 public class DBValue<T> {
 

@@ -1,5 +1,7 @@
 package org.pastore.db;
 
+import org.pastore.db.value.DBValue;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Store {

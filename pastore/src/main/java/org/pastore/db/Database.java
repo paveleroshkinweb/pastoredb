@@ -34,15 +34,19 @@ public class Database {
         this.saveInterval = saveInterval;
     }
 
-    private static List<Store> readDump(DumpFileProperty dumpFile) {
-        return new ArrayList<>();
+    private static List<Store> readDump(DumpFileProperty dumpFile, DatabasesProperty databases) {
+        List<Store> db = new ArrayList<>();
+        for (int i = 0; i < databases.getValue(); i ++) {
+            db.add(new Store());
+        }
+        return db;
     }
 
     public static void init(DumpFileProperty dumpFile,
                             HistoryFileProperty historyFile,
                             DatabasesProperty databases,
                             SaveIntervalProperty saveInterval) {
-        List<Store> db = readDump(dumpFile);
+        List<Store> db = readDump(dumpFile, databases);
         instance = new Database(db, dumpFile, historyFile, databases, saveInterval);
     }
 

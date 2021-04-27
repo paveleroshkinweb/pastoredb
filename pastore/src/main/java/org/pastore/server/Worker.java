@@ -7,7 +7,8 @@ import org.pastore.command.exception.InvalidCommand;
 import org.pastore.connection.Connection;
 import org.pastore.db.Database;
 import org.pastore.db.Store;
-import org.pastore.handle.CommandHandler;
+import org.pastore.handle.HandlerFactory;
+import org.pastore.handle.IHandle;
 import org.pastore.parse.CommandParser;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class Worker implements Runnable {
                 int connectionDB = connection.getCurrentDB();
                 Store store = Database.getInstance().getStoreByIndex(connectionDB);
 
-                CommandHandler commandHandler = CommandHandler.getHandlerByCommand(command.getCommandType());
+                IHandle commandHandler = HandlerFactory.getHandlerByCommand(command.getCommandType());
                 commandHandler.handle(command, connection, store);
             } catch (InvalidCommand e) {
                 this.connection.setErrorResponse(e.getMessage());

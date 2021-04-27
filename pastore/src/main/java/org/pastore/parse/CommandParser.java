@@ -16,15 +16,15 @@ public class CommandParser {
     };
 
     public static Command parseTextToCommand(String text) throws InvalidCommand {
-        String normalizedCommand = text.trim();
-        String plainCommand = getPlainCommand(normalizedCommand);
+        String trimmedText = text.trim();
+        String plainCommand = getPlainCommand(trimmedText);
         CommandType commandType = CommandType.getCommandByName(plainCommand);
         if (commandType == null) {
             throw new InvalidCommand("There is no command: " + plainCommand);
         }
         IParse commandParser = getParserByCommandType(commandType);
 
-        return commandParser.parse(normalizedCommand);
+        return commandParser.parse(trimmedText);
     }
 
     public static IParse getParserByCommandType(CommandType commandType) {
@@ -32,8 +32,12 @@ public class CommandParser {
     }
 
     private static String getPlainCommand(String text) {
-        int i = text.indexOf(" ");
-        String word = text.substring(0, i);
-        return word;
+        try {
+            int i = text.indexOf(" ");
+            String word = text.substring(0, i);
+            return word;
+        } catch (StringIndexOutOfBoundsException e) {
+            return text;
+        }
     }
 }

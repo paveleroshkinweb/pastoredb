@@ -1,16 +1,23 @@
 package org.pastore.db.value;
 
-public class DBValue<T> {
+import org.pastore.connection.Connection;
 
-    private String propertyName;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class DBValue<T> {
 
     private T value;
 
     private DBValueType dbValueType;
 
+    private List<Connection> subscribers;
+
     public DBValue(T value, DBValueType dbValueType) {
         this.value = value;
         this.dbValueType = dbValueType;
+        this.subscribers = Collections.synchronizedList(new ArrayList<>());
     }
 
     public T getValue() {
@@ -24,4 +31,6 @@ public class DBValue<T> {
     public String toString() {
         return dbValueType.getPrefix() + ":" + value.toString();
     }
+
+
 }

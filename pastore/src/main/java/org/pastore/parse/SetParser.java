@@ -21,7 +21,7 @@ public class SetParser implements IParse {
             String[] splitedText = plainValue.split(" ");
             String propertyName = splitedText[1];
             Map<OptionType, String> options = this.extractOptions(plainValue, requiredOptions, optionalOptions);
-            SetCommand command = new SetCommand(propertyName, options);
+            SetCommand command = new SetCommand(plainValue, propertyName, options);
             return command;
         } catch (InvalidCommand e) {
             throw e;

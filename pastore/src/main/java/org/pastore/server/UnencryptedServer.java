@@ -34,7 +34,7 @@ public class UnencryptedServer extends Server {
 
     private Map<SocketChannel, Connection> connections;
 
-    private final ExecutorService handlers = Executors.newFixedThreadPool(workersNumber);
+    private final ExecutorService workers = Executors.newFixedThreadPool(workersNumber);
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
@@ -108,7 +108,7 @@ public class UnencryptedServer extends Server {
             if (commands != null) {
                 logger.info("Recieved " + commands.length + " new commands from: " + connectionChannel.getRemoteAddress());
                 for (String plainCommand : commands) {
-                    handlers.execute(new Worker(connection, plainCommand));
+                    workers.execute(new Worker(connection, plainCommand));
                 }
             }
         } catch (ServerException e) {

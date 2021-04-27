@@ -25,6 +25,8 @@ public class Connection {
 
     private int currentDB;
 
+    private boolean closed;
+
     public Connection(final SocketChannel clientChannel,
                       final Selector selector,
                       final MessageReader messageReader,
@@ -36,6 +38,7 @@ public class Connection {
         this.response = null;
         this.loggedIn = ! passwordProtectedProperty.getValue();
         this.currentDB = 0;
+        this.closed = false;
     }
 
     public boolean needToBeClosed() {
@@ -60,11 +63,15 @@ public class Connection {
         this.selector.wakeup();
     }
 
+    public void setOKResponse() throws IOException{
+        this.setResponse("+OK");
+    }
+
     public void setErrorResponse(String response) throws IOException {
         this.setResponse("-" + response);
     }
 
-    public void setOkResponse(String response) throws IOException {
+    public void setSuccessResponse(String response) throws IOException {
         this.setResponse("+" + response);
     }
 
@@ -73,13 +80,14 @@ public class Connection {
         this.setErrorResponse(response);
     }
 
-    public void setOkResponseAndClose(String response) throws IOException {
+    public void setSuccessResponseAndClose(String response) throws IOException {
         this.needToBeClosed = true;
-        this.setOkResponse(response);
+        this.setSuccessResponse(response);
     }
 
     public void closeConnection() throws IOException {
         this.setResponse(null);
+        this.closed = true;
     }
 
     public ByteBuffer getResponse() {
@@ -100,5 +108,9 @@ public class Connection {
 
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+
+    public boolean isClosed() {
+        return closed;
     }
 }

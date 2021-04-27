@@ -19,7 +19,7 @@ if __name__ == '__main__':
                 encoded_message = message.encode()
                 client_socket.sendall(encoded_message)
                 response = client_socket.recv(4096)
-                print(response.decode())
+                print(response.decode().strip())
             except BrokenPipeError:
                 print("server closed connection!")
                 break

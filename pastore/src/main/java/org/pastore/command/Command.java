@@ -8,14 +8,18 @@ public class Command {
 
     private CommandType commandType;
 
+    private String plainCommand;
+
     private String property;
 
     private Map<OptionType, String> options;
 
     public Command(CommandType commandType,
+                   String plainCommand,
                    String property,
                    Map<OptionType, String> options) {
         this.commandType = commandType;
+        this.plainCommand = plainCommand;
         this.property = property;
         this.options = options;
     }
@@ -42,5 +46,13 @@ public class Command {
 
     public void setOptions(Map<OptionType, String> options) {
         this.options = options;
+    }
+
+    public String getPlainCommand() {
+        return plainCommand;
+    }
+
+    public void setPlainCommand(String plainCommand) {
+        this.plainCommand = plainCommand;
     }
 }

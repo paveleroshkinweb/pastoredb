@@ -16,7 +16,9 @@ public enum CommandType {
     SUBSCRIBE("SUB"),
     LOGIN("LOGIN"),
     USE("USE"),
-    DB("DB");
+    DB("DB"),
+    EXIT("EXIT"),
+    UPDATE("UPDATE");
 
     final String name;
 

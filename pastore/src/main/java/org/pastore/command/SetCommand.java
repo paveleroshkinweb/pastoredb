@@ -6,8 +6,14 @@ import java.util.Map;
 
 public class SetCommand extends Command {
 
-    public SetCommand(String property, Map<OptionType, String> options) {
-        super(CommandType.SET, property, options);
+    private static final OptionType[] AVAILABLE_OPTIONS = { OptionType.TYPE, OptionType.VALUE, OptionType.EXPIRES }
+
+    public SetCommand(String plainCommand, String property, Map<OptionType, String> options) {
+        super(CommandType.SET, plainCommand, property, options);
+    }
+
+    public static OptionType[] getAvailableOptions() {
+        return AVAILABLE_OPTIONS;
     }
 
 }

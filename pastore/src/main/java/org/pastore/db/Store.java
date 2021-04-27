@@ -12,5 +12,19 @@ public class Store {
         this.store = store;
     }
 
-    public Store() {}
+    public Store() {
+        this.store = new ConcurrentHashMap<>();
+    }
+
+    public DBValue getDBValueByName(String name) {
+        return this.store.get(name);
+    }
+
+    public boolean keyExists(String key) {
+        return this.store.containsKey(key);
+    }
+
+    public void addDBValue(String property, DBValue dbValue) {
+        this.store.put(property, dbValue);
+    }
 }

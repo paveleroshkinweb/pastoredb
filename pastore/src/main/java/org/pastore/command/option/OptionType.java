@@ -28,4 +28,9 @@ public enum OptionType {
         return types.get(name);
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
 }

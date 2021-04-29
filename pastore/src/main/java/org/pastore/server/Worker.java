@@ -3,7 +3,7 @@ package org.pastore.server;
 import org.apache.log4j.Logger;
 import org.pastore.command.Command;
 import org.pastore.command.CommandType;
-import org.pastore.command.exception.InvalidCommand;
+import org.pastore.command.exception.InvalidCommandException;
 import org.pastore.connection.Connection;
 import org.pastore.db.Database;
 import org.pastore.db.Store;
@@ -41,7 +41,7 @@ public class Worker implements Runnable {
 
                 IHandle commandHandler = HandlerFactory.getHandlerByCommand(command.getCommandType());
                 commandHandler.handle(command, connection, store);
-            } catch (InvalidCommand e) {
+            } catch (InvalidCommandException e) {
                 this.connection.setErrorResponse(e.getMessage());
             }
         } catch (IOException e) {

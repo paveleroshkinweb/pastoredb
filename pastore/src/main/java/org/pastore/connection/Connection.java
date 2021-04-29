@@ -3,6 +3,7 @@ package org.pastore.connection;
 import org.pastore.config.property.PasswordProtectedProperty;
 
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -27,6 +28,8 @@ public class Connection {
 
     private boolean closed;
 
+    private SocketAddress socketAddress;
+
     public Connection(final SocketChannel clientChannel,
                       final Selector selector,
                       final MessageReader messageReader,
@@ -37,7 +40,9 @@ public class Connection {
         this.selector = selector;
         this.response = null;
         this.loggedIn = ! passwordProtectedProperty.getValue();
+        this.socketAddress = clientChannel.getRemoteAddress();
         this.currentDB = 0;
+
         this.closed = false;
     }
 
@@ -87,7 +92,7 @@ public class Connection {
 
     public void closeConnection() throws IOException {
         this.setResponse(null);
-        this.closed = true;
+        this.setClosed();
     }
 
     public ByteBuffer getResponse() {
@@ -112,5 +117,14 @@ public class Connection {
 
     public boolean isClosed() {
         return closed;
+    }
+
+    public void setClosed() {
+        this.closed = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Connection{" + "address=" + this.socketAddress + '}';
     }
 }

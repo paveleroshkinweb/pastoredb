@@ -13,10 +13,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,7 +45,7 @@ public class UnencryptedServer extends Server {
         this.channel.configureBlocking(false);
         this.selector = Selector.open();
         this.channel.register(selector, SelectionKey.OP_ACCEPT);
-        this.connections = new ConcurrentHashMap<>();
+        this.connections = new HashMap<>();
     }
 
     public void listen() {
@@ -147,6 +147,7 @@ public class UnencryptedServer extends Server {
 
     private void closeConnection(SocketChannel channel) {
         if (this.connections.containsKey(channel)) {
+            this.connections.get(channel).setClosed();
             this.connections.remove(channel);
         }
         this.closeChannel(channel);

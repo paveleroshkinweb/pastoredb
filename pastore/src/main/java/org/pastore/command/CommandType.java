@@ -10,15 +10,13 @@ public enum CommandType {
     SET("SET"),
     INCREMENT("INCREMENT"),
     EXISTS("EXISTS"),
-    FLUSH("FLUSH"),
     APPEND("APPEND"),
     POP("POP"),
     SUBSCRIBE("SUB"),
     LOGIN("LOGIN"),
     USE("USE"),
     DB("DB"),
-    EXIT("EXIT"),
-    UPDATE("UPDATE");
+    EXIT("EXIT");
 
     final String name;
 
@@ -28,7 +26,6 @@ public enum CommandType {
 
     CommandType(final String name) {
         this.name = name;
-
     }
 
     public String getName() {

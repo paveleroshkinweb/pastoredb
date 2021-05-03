@@ -1,12 +1,13 @@
 package org.pastore.db.value;
 
+import org.pastore.clientexception.command.InvalidCommandException;
 import org.pastore.connection.Connection;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DBValue<T> {
+public abstract class DBValue<T> {
 
     private T value;
 
@@ -32,5 +33,9 @@ public class DBValue<T> {
         return dbValueType.getPrefix() + ":" + value.toString();
     }
 
+    public void setValue(T value) {
+        this.value = value;
+    }
 
+    public abstract void increment() throws InvalidCommandException;
 }

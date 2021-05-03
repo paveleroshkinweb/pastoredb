@@ -1,7 +1,7 @@
 package org.pastore.handle;
 
 import org.pastore.command.Command;
-import org.pastore.command.exception.InvalidCommandException;
+import org.pastore.clientexception.command.InvalidCommandException;
 import org.pastore.connection.Connection;
 import org.pastore.db.Store;
 

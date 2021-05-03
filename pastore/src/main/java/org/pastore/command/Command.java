@@ -10,17 +10,17 @@ public class Command {
 
     private String plainCommand;
 
-    private String property;
+    private Map<PropertyType, String> properties;
 
     private Map<OptionType, String> options;
 
     public Command(CommandType commandType,
                    String plainCommand,
-                   String property,
+                   Map<PropertyType, String> properties,
                    Map<OptionType, String> options) {
         this.commandType = commandType;
         this.plainCommand = plainCommand;
-        this.property = property;
+        this.properties = properties;
         this.options = options;
     }
 
@@ -32,12 +32,12 @@ public class Command {
         this.commandType = commandType;
     }
 
-    public String getProperty() {
-        return property;
+    public Map<PropertyType, String> getProperties() {
+        return properties;
     }
 
-    public void setProperty(String property) {
-        this.property = property;
+    public void setProperties(Map<PropertyType, String> properties) {
+        this.properties = properties;
     }
 
     public Map<OptionType, String> getOptions() {

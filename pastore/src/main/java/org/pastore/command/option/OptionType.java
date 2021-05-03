@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 public enum OptionType {
 
     EXPIRES("EXPIRES"),
-    VALUE("VALUE"),
     TYPE("TYPE");
 
     final String name;

@@ -18,6 +18,8 @@ public class Connection {
 
     private boolean needToBeClosed;
 
+    private boolean closed;
+
     private Selector selector;
 
     private ByteBuffer response;
@@ -25,8 +27,6 @@ public class Connection {
     private boolean loggedIn;
 
     private int currentDB;
-
-    private boolean closed;
 
     private SocketAddress socketAddress;
 

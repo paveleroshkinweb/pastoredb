@@ -1,11 +1,8 @@
 package org.pastore.config.property;
 
-import org.apache.log4j.Logger;
-import org.pastore.Main;
-import org.pastore.config.ConfigLoader;
+import org.pastore.config.Loader;
 import org.pastore.config.transform.ITransform;
-import org.pastore.config.exception.InvalidConfigPropertyException;
-import org.pastore.logging.LoggerLoader;
+import org.pastore.clientexception.config.InvalidConfigPropertyException;
 
 
 public class Property<T> {
@@ -18,30 +15,26 @@ public class Property<T> {
 
     private T defaultValue;
 
-    private T cachedValue;
-
-    public T getValue() {
-        if (cachedValue != null) {
-            return cachedValue;
-        }
-        try {
-            T result = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
-            cachedValue = result;
-        } catch (InvalidConfigPropertyException e) {
-            if (LoggerLoader.isLoaded()) {
-                Logger logger = Logger.getLogger(Property.class);
-                logger.error("Exception occurred", e);
-            }
-            System.exit(1);
-        }
-        return cachedValue;
-    }
+    private T value;
 
     public Property(ConfigProperty configProperty, T defaultValue, ITransform<T> transformator) {
         this.configProperty = configProperty;
-        this.plainValue = ConfigLoader.getProperty(configProperty.getPropertyName());
+        this.plainValue = Loader.getPlainPropertyValue(configProperty.getPropertyName());
         this.defaultValue = defaultValue;
         this.transformator = transformator;
+        this.value = null;
+    }
+
+    public T getValue() {
+        return this.value;
+    }
+
+    public void process() throws InvalidConfigPropertyException {
+        this.value = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 
     public ConfigProperty getConfigProperty() {
@@ -55,4 +48,5 @@ public class Property<T> {
     public T getDefaultValue() {
         return this.defaultValue;
     }
+
 }

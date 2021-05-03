@@ -16,6 +16,18 @@ public abstract class HandlerFactory {
         IHandle handler = null;
         if (commandType == CommandType.SET) {
             handler = new SetCommandHandler();
+        } else if (commandType == CommandType.EXIT) {
+            handler = new ExitCommandHandler();
+        } else if (commandType == CommandType.DB) {
+            handler = new DBCommandHandler();
+        } else if (commandType == CommandType.USE) {
+            handler = new UseCommandHandler();
+        } else if (commandType == CommandType.EXISTS) {
+            handler = new ExistsCommandHandler();
+        } else if (commandType == CommandType.INCREMENT) {
+            handler = new IncrementCommandHandler();
+        } else if (commandType == CommandType.PUSH) {
+            handler = new PushCommandHandler();
         }
         handlers.put(commandType, handler);
         return handler;

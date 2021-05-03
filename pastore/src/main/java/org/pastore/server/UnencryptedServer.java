@@ -3,7 +3,7 @@ package org.pastore.server;
 import org.apache.log4j.Logger;
 import org.pastore.connection.Connection;
 import org.pastore.connection.MessageReader;
-import org.pastore.server.exception.ServerException;
+import org.pastore.clientexception.connection.ConnectionException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -24,8 +24,6 @@ public class UnencryptedServer extends Server {
 
     private static final Logger logger = Logger.getLogger(UnencryptedServer.class);
 
-    private static final int workersNumber = Runtime.getRuntime().availableProcessors();
-
     private ServerSocketChannel channel;
 
     private Selector selector;
@@ -34,7 +32,7 @@ public class UnencryptedServer extends Server {
 
     private Map<SocketChannel, Connection> connections;
 
-    private final ExecutorService workers = Executors.newFixedThreadPool(workersNumber);
+    private final ExecutorService workers = Executors.newSingleThreadExecutor();
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
@@ -104,15 +102,13 @@ public class UnencryptedServer extends Server {
         Connection connection = this.connections.get(connectionChannel);
         MessageReader messageReader = connection.getMessageReader();
         try {
-            String[] commands = messageReader.readCommands();
-            if (commands != null) {
-                logger.info("Recieved " + commands.length + " new commands from: " + connectionChannel.getRemoteAddress());
-                for (String plainCommand : commands) {
-                    workers.execute(new Worker(connection, plainCommand));
-                }
+            String plainCommand = messageReader.readCommand();
+            if (plainCommand != null) {
+                logger.info("Recieved new commands from: " + connection);
+                workers.execute(new Worker(connection, plainCommand));
             }
-        } catch (ServerException e) {
-            logger.info("ServerException occurred while reading data: " + e.getMessage(), e);
+        } catch (ConnectionException e) {
+            logger.info("Connection exception occurred while reading data: " + e.getMessage(), e);
             this.closeConnection(connectionChannel);
         }
     }

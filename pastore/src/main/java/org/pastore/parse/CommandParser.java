@@ -2,15 +2,12 @@ package org.pastore.parse;
 
 import org.pastore.command.Command;
 import org.pastore.command.CommandType;
-import org.pastore.command.exception.InvalidCommandException;
-import org.pastore.command.exception.UnknownCommandException;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.clientexception.command.UnknownCommandException;
 
 public class CommandParser {
 
-    private static final Map<CommandType, Parser> parsers = new HashMap<>();
+    private static final IParse parser = new Parser();
 
     public static Command parseTextToCommand(String text) throws InvalidCommandException {
         String trimmedText = text.trim();
@@ -19,18 +16,9 @@ public class CommandParser {
         if (commandType == null) {
             throw new UnknownCommandException(plainCommand);
         }
-        Parser commandParser = getParserByCommandType(commandType);
-        return commandParser.parse(trimmedText);
+        return parser.parse(commandType, trimmedText);
     }
 
-    public static Parser getParserByCommandType(CommandType commandType) {
-        if (! parsers.containsKey(commandType)) {
-            if (commandType == CommandType.SET) {
-                parsers.put(commandType, new SetCommandParser());
-            }
-        }
-        return parsers.get(commandType);
-    }
 
     private static String getPlainCommand(String text) {
         try {

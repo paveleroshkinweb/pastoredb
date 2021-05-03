@@ -1,7 +1,7 @@
 package org.pastore.config.transform;
 
 import org.pastore.config.property.ConfigProperty;
-import org.pastore.config.exception.InvalidConfigPropertyException;
+import org.pastore.clientexception.config.InvalidConfigPropertyException;
 
 public interface ITransform<T> {
 

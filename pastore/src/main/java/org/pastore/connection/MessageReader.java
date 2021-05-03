@@ -1,17 +1,24 @@
 package org.pastore.connection;
 
-import org.pastore.server.exception.ClientLeftException;
-import org.pastore.server.exception.ServerException;
+import org.pastore.clientexception.connection.ClientLeftException;
+import org.pastore.clientexception.connection.ConnectionException;
+import org.pastore.clientexception.connection.InvalidProtocolException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+
 
 public class MessageReader implements IReader {
 
-    private static final int bufferSize = 100   ;
+    private static final String PROTOCOL_ERR = "Client has to wait an answer from pastore before send next request using one connection";
+
+    private static final String CLIENT_LEFT_ERR = "Client closed connection!";
+
+    private static final int bufferSize = 8192;
+
+    private static final String delimiter = "\n";
 
     private final SocketChannel channel;
 
@@ -19,13 +26,13 @@ public class MessageReader implements IReader {
 
     private ByteBuffer readBuffer;
 
-    public MessageReader(final SocketChannel channel) throws IOException{
+    public MessageReader(final SocketChannel channel) throws IOException {
         this.channel = channel;
         this.unfinishedMessage = new StringBuilder();
         this.readBuffer = ByteBuffer.allocate(bufferSize);
     }
 
-    public String[] readCommands() throws ServerException, IOException {
+    public String readCommand() throws ConnectionException, IOException {
         int read = 0;
         while ((read = channel.read(this.readBuffer)) > 0) {
             this.readBuffer.flip();
@@ -37,38 +44,23 @@ public class MessageReader implements IReader {
         }
 
         if (read == -1) {
-            throw new ClientLeftException("Client closed connection!");
+            throw new ClientLeftException(CLIENT_LEFT_ERR);
         }
         return null;
     }
 
-    private String[] parse(String newData) {
-        if (newData.equals("\n")) {
-            String[] messages = { unfinishedMessage.toString() };
-            unfinishedMessage.setLength(0);
-            return messages;
+    private String parse(String newData) throws ConnectionException {
+        int delimiterIndex = newData.indexOf(delimiter);
+        if (delimiterIndex == -1) {
+            unfinishedMessage.append(newData);
+            return null;
         }
-        String[] messages = newData.split("\n", -1);
-        if (messages.length > 0) {
-            if (messages.length == 1) {
-                unfinishedMessage.append(messages[0]);
-            } else {
-                if (! messages[0].isEmpty()) {
-                    unfinishedMessage.append(messages[0]);
-                }
-                messages[0] = unfinishedMessage.toString();
-                unfinishedMessage.setLength(0);
-                if (! messages[messages.length - 1].isEmpty()) {
-                    unfinishedMessage.append(messages[messages.length - 1]);
-                }
-                return copyMessages(messages);
-            }
+        if (delimiterIndex < newData.length() - 1) {
+            throw new InvalidProtocolException(PROTOCOL_ERR);
         }
-        return null;
-    }
-
-    private String[] copyMessages(String[] messages) {
-        return Arrays.copyOfRange(messages, 0, messages.length - 1);
+        String result = unfinishedMessage.append(newData, 0, newData.length() - 1).toString();
+        unfinishedMessage.setLength(0);
+        return result;
     }
 
     public SocketChannel getChannel() {

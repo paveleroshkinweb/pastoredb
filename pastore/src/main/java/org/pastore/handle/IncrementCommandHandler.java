@@ -6,7 +6,6 @@ import org.pastore.command.PropertyType;
 import org.pastore.connection.Connection;
 import org.pastore.db.Store;
 import org.pastore.db.value.DBValue;
-import org.pastore.db.value.DBValueType;
 
 import java.io.IOException;
 
@@ -19,11 +18,7 @@ public class IncrementCommandHandler implements IHandle {
             throw new InvalidCommandException("key " + key + " is not existed!");
         }
         DBValue dbValue = store.getDBValueKey(key);
-        if (dbValue.getDbValueType() != DBValueType.INTEGER) {
-            throw new InvalidCommandException("key " + key + " is not an integer!");
-        }
-        Integer newValue = ((Integer) dbValue.getValue()) + 1;
-        dbValue.setValue(newValue);
+        dbValue.increment();
         connection.setOKResponse();
     }
 }

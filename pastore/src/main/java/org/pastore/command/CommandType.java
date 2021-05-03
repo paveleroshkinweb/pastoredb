@@ -12,6 +12,7 @@ public enum CommandType {
     SET("SET", new SetFormat()), // +
     INCREMENT("INCREMENT", new IncrementFormat()), //+
     EXISTS("EXISTS", new ExistsFormat()), // +
+    INDEX("INDEX", null),
     PUSH("PUSH", new PushFormat()), // +
     POP("POP", null),
     SHIFT("SHIFT", null),

@@ -78,7 +78,7 @@ public class SetCommandHandler implements IHandle {
         return dbValue;
     }
 
-    private DBValue createNewStringValue(String plainValue) {
+    private DBValue createNewStringValue(String plainValue) throws InvalidCommandException {
         DBValue dbValue = new StringDBValue(plainValue);
         return dbValue;
     }

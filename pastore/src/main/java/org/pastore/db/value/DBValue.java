@@ -1,6 +1,7 @@
 package org.pastore.db.value;
 
 import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.command.CommandType;
 import org.pastore.connection.Connection;
 
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class DBValue<T> {
+
+    private static final String INVALID_COMMAND = "%s is not allowed for type %s";
 
     private T value;
 
@@ -37,5 +40,24 @@ public abstract class DBValue<T> {
         this.value = value;
     }
 
-    public abstract void increment() throws InvalidCommandException;
+    public void increment() throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                    INVALID_COMMAND,
+                    CommandType.INCREMENT.getName(),
+                    this.dbValueType.getPrefix()));
+    }
+
+    public void push(String value) throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.PUSH.getName(),
+                this.dbValueType.getPrefix()));
+    }
+
+    public String pop() throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.POP.getName(),
+                this.dbValueType.getPrefix()));
+    }
 }

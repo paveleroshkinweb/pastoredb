@@ -9,18 +9,16 @@ import org.pastore.db.value.DBValue;
 
 import java.io.IOException;
 
-public class PushCommandHandler implements IHandle {
+public class SizeCommandHandler implements IHandle {
 
     @Override
     public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
         String key = command.getProperties().get(PropertyType.KEY);
-
         if (! store.keyExists(key)) {
             throw new InvalidCommandException("key " + key + " does not exist!");
         }
         DBValue dbValue = store.getDBValueKey(key);
-        String plainValue = command.getProperties().get(PropertyType.VALUE);
-        dbValue.push(plainValue);
-        connection.setOKResponse();
+        String size = dbValue.size();
+        connection.setSuccessResponse(size);
     }
 }

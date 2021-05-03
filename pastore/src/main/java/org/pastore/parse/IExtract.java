@@ -1,6 +1,6 @@
 package org.pastore.parse;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 
 public interface IExtract {
 

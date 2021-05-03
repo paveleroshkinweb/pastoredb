@@ -1,9 +1,10 @@
 package org.pastore.parse;
 
-import org.pastore.clientexception.command.EmptyKeyException;
-import org.pastore.clientexception.command.InvalidCharException;
-import org.pastore.clientexception.command.InvalidCommandException;
-import org.pastore.clientexception.command.UnbalancedQuotesException;
+import org.pastore.exception.command.EmptyKeyException;
+import org.pastore.exception.command.InvalidCharException;
+import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.command.UnbalancedQuotesException;
+import org.pastore.db.value.DBValueType;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -59,7 +60,9 @@ public class StrUtils {
     public static String stringExtract(String name, String text, Character quote) throws InvalidCommandException {
         StringBuilder result = new StringBuilder();
         if (text.charAt(0) != quote) {
-            throw new InvalidCommandException(name + " value should be in " + quote + " quotes!");
+            throw new InvalidCommandException(
+                    name + " value should be in " + quote + " quotes and should not contain spaces between elements!"
+            );
         }
         int pointer = 1;
         boolean closed = false;
@@ -112,7 +115,7 @@ public class StrUtils {
         List<String> results = new LinkedList<>();
         text = text.substring(1, text.length()-1);
         while (text.length() > 0) {
-            String nextStr = StrUtils.stringExtract("StrArray elements", text, '\'');
+            String nextStr = StrUtils.stringExtract(DBValueType.LIST_STR .getPrefix() + " elements", text, '\'');
             results.add(nextStr);
             text = StrUtils.slice(text, nextStr.length() + 3);
         }

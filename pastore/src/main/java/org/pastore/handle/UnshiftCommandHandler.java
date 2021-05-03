@@ -9,7 +9,7 @@ import org.pastore.db.value.DBValue;
 
 import java.io.IOException;
 
-public class PushCommandHandler implements IHandle {
+public class UnshiftCommandHandler implements IHandle {
 
     @Override
     public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
@@ -20,7 +20,7 @@ public class PushCommandHandler implements IHandle {
         }
         DBValue dbValue = store.getDBValueKey(key);
         String plainValue = command.getProperties().get(PropertyType.VALUE);
-        dbValue.push(plainValue);
+        dbValue.unshift(plainValue);
         connection.setOKResponse();
     }
 }

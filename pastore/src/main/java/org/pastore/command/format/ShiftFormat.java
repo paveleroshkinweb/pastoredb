@@ -6,15 +6,15 @@ import org.pastore.command.option.OptionType;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PushFormat extends Format {
+public class ShiftFormat extends Format {
 
-    private static final PropertyType[] format = { PropertyType.KEY, PropertyType.VALUE };
+    private static final PropertyType[] format = { PropertyType.KEY };
 
     private static final Set<OptionType> reqOptions = new HashSet<>();
 
     private static final Set<OptionType> posOptions = new HashSet<>();
 
-    public PushFormat() {
+    public ShiftFormat() {
         super(format, reqOptions, posOptions);
     }
 }

@@ -1,6 +1,6 @@
 package org.pastore.config.transform;
 
-import org.pastore.clientexception.config.InvalidConfigPropertyException;
+import org.pastore.exception.config.InvalidConfigPropertyException;
 import org.pastore.config.property.ConfigProperty;
 import org.pastore.utils.FSHelper;
 

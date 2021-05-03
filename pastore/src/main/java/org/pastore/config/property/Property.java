@@ -2,7 +2,7 @@ package org.pastore.config.property;
 
 import org.pastore.config.Loader;
 import org.pastore.config.transform.ITransform;
-import org.pastore.clientexception.config.InvalidConfigPropertyException;
+import org.pastore.exception.config.InvalidConfigPropertyException;
 
 
 public class Property<T> {

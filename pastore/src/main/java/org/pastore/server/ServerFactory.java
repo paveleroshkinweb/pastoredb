@@ -1,7 +1,7 @@
 package org.pastore.server;
 
 import org.pastore.config.Loader;
-import org.pastore.clientexception.config.InvalidConfigPropertyException;
+import org.pastore.exception.config.InvalidConfigPropertyException;
 import org.pastore.config.property.*;
 
 import java.io.IOException;

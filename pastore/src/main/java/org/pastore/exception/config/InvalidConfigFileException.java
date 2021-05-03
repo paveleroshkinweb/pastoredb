@@ -1,4 +1,4 @@
-package org.pastore.clientexception.config;
+package org.pastore.exception.config;
 
 public class InvalidConfigFileException extends ConfigException {
 

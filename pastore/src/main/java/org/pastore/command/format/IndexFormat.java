@@ -6,7 +6,7 @@ import org.pastore.command.option.OptionType;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PushFormat extends Format {
+public class IndexFormat extends Format {
 
     private static final PropertyType[] format = { PropertyType.KEY, PropertyType.VALUE };
 
@@ -14,7 +14,7 @@ public class PushFormat extends Format {
 
     private static final Set<OptionType> posOptions = new HashSet<>();
 
-    public PushFormat() {
+    public IndexFormat() {
         super(format, reqOptions, posOptions);
     }
 }

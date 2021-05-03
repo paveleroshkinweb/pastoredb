@@ -1,6 +1,6 @@
 package org.pastore.db.value;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 
 public class IntegerDBValue extends DBValue<Integer> {
 

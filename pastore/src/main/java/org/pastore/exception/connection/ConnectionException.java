@@ -1,6 +1,6 @@
-package org.pastore.clientexception.connection;
+package org.pastore.exception.connection;
 
-import org.pastore.clientexception.BaseException;
+import org.pastore.exception.BaseException;
 
 public class ConnectionException extends BaseException {
 

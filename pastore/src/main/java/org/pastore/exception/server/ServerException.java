@@ -1,6 +1,6 @@
-package org.pastore.clientexception.server;
+package org.pastore.exception.server;
 
-import org.pastore.clientexception.BaseException;
+import org.pastore.exception.BaseException;
 
 public class ServerException extends BaseException {
 

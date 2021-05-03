@@ -28,6 +28,18 @@ public abstract class HandlerFactory {
             handler = new IncrementCommandHandler();
         } else if (commandType == CommandType.PUSH) {
             handler = new PushCommandHandler();
+        } else if (commandType == CommandType.POP) {
+            handler = new PopCommandHandler();
+        } else if (commandType == CommandType.SHIFT) {
+            handler = new ShiftCommandHandler();
+        } else if (commandType == CommandType.UNSHIFT) {
+            handler = new UnshiftCommandHandler();
+        } else if (commandType == CommandType.SIZE) {
+            handler = new SizeCommandHandler();
+        } else if (commandType == CommandType.INDEX) {
+            handler = new IndexCommandHandler();
+        } else if (commandType == CommandType.GET) {
+            handler = new GetCommandHandler();
         }
         handlers.put(commandType, handler);
         return handler;

@@ -1,6 +1,6 @@
 package org.pastore.db.value;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.command.CommandType;
 import org.pastore.connection.Connection;
 
@@ -33,6 +33,10 @@ public abstract class DBValue<T> {
     }
 
     public String toString() {
+        return value.toString();
+    }
+
+    public String toResponse() {
         return dbValueType.getPrefix() + ":" + value.toString();
     }
 
@@ -58,6 +62,34 @@ public abstract class DBValue<T> {
         throw new InvalidCommandException(String.format(
                 INVALID_COMMAND,
                 CommandType.POP.getName(),
+                this.dbValueType.getPrefix()));
+    }
+
+    public String shift() throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.SHIFT.getName(),
+                this.dbValueType.getPrefix()));
+    }
+
+    public void unshift(String value) throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.UNSHIFT.getName(),
+                this.dbValueType.getPrefix()));
+    }
+
+    public String size() throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.SIZE.getName(),
+                this.dbValueType.getPrefix()));
+    }
+
+    public String index(int index) throws InvalidCommandException {
+        throw new InvalidCommandException(String.format(
+                INVALID_COMMAND,
+                CommandType.INDEX.getName(),
                 this.dbValueType.getPrefix()));
     }
 }

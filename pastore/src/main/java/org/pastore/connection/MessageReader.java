@@ -1,8 +1,8 @@
 package org.pastore.connection;
 
-import org.pastore.clientexception.connection.ClientLeftException;
-import org.pastore.clientexception.connection.ConnectionException;
-import org.pastore.clientexception.connection.InvalidProtocolException;
+import org.pastore.exception.connection.ClientLeftException;
+import org.pastore.exception.connection.ConnectionException;
+import org.pastore.exception.connection.InvalidProtocolException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

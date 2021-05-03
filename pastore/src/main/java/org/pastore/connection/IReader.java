@@ -1,6 +1,6 @@
 package org.pastore.connection;
 
-import org.pastore.clientexception.connection.ConnectionException;
+import org.pastore.exception.connection.ConnectionException;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package org.pastore.server;
 import org.apache.log4j.Logger;
 import org.pastore.connection.Connection;
 import org.pastore.connection.MessageReader;
-import org.pastore.clientexception.connection.ConnectionException;
+import org.pastore.exception.connection.ConnectionException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

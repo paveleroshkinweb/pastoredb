@@ -1,4 +1,4 @@
-package org.pastore.clientexception;
+package org.pastore.exception;
 
 public class BaseException extends Exception {
 

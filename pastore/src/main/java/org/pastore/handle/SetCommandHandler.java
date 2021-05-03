@@ -1,6 +1,6 @@
 package org.pastore.handle;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.command.Command;
 import org.pastore.command.PropertyType;
 import org.pastore.command.option.OptionType;
@@ -12,6 +12,7 @@ import org.pastore.parse.StrUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SetCommandHandler implements IHandle {
 
@@ -44,10 +45,10 @@ public class SetCommandHandler implements IHandle {
         } else if (type == DBValueType.STRING) {
             dbValue.setValue(plainValue);
         } else if (type == DBValueType.LIST_INT) {
-            List<Integer> intList = StrUtils.parseStringToIntList(plainValue);
+            List<IntegerDBValue> intList = intListToDBList(StrUtils.parseStringToIntList(plainValue));
             dbValue.setValue(intList);
         } else {
-            List<String> strList = StrUtils.parseStringToStrList(plainValue);
+            List<StringDBValue> strList = strListToDBList(StrUtils.parseStringToStrList(plainValue));
             dbValue.setValue(strList);
         }
     }
@@ -84,14 +85,22 @@ public class SetCommandHandler implements IHandle {
     }
 
     private DBValue createNewIntListValue(String plainValue) throws InvalidCommandException {
-        List<Integer> intList = StrUtils.parseStringToIntList(plainValue);
+        List<IntegerDBValue> intList = intListToDBList(StrUtils.parseStringToIntList(plainValue));
         DBValue value = new ListIntDBValue(intList);
         return value;
     }
 
     private DBValue createNewStrListValue(String plainValue) throws InvalidCommandException{
-        List<String> strList = StrUtils.parseStringToStrList(plainValue);
+        List<StringDBValue> strList = strListToDBList(StrUtils.parseStringToStrList(plainValue));
         DBValue value = new ListStrDBValue(strList);
         return value;
+    }
+
+    private List<IntegerDBValue> intListToDBList(List<Integer> list) {
+        return list.stream().map(IntegerDBValue::new).collect(Collectors.toList());
+    }
+
+    private List<StringDBValue> strListToDBList(List<String> list) {
+        return list.stream().map(StringDBValue::new).collect(Collectors.toList());
     }
 }

@@ -8,15 +8,16 @@ import java.util.stream.Collectors;
 
 public enum CommandType {
 
-    GET("GET", null),
+    GET("GET", new GetFormat()),
     SET("SET", new SetFormat()), // +
     INCREMENT("INCREMENT", new IncrementFormat()), //+
     EXISTS("EXISTS", new ExistsFormat()), // +
-    INDEX("INDEX", null),
+    INDEX("INDEX", new IndexFormat()), // +
+    SIZE("SIZE", new SizeFormat()), // +
     PUSH("PUSH", new PushFormat()), // +
-    POP("POP", null),
-    SHIFT("SHIFT", null),
-    UNSHIFT("UNSHIFT", null),
+    POP("POP", new PopFormat()), // +
+    SHIFT("SHIFT", new ShiftFormat()), // +
+    UNSHIFT("UNSHIFT", new UnshiftFormat()), // +
     SUBSCRIBE("SUB", null),
     UNSUBSCRIBE("UNSUB", null),
     LOGIN("LOGIN", null),

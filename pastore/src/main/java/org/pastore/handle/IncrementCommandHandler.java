@@ -1,6 +1,6 @@
 package org.pastore.handle;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.command.Command;
 import org.pastore.command.PropertyType;
 import org.pastore.connection.Connection;
@@ -15,7 +15,7 @@ public class IncrementCommandHandler implements IHandle {
     public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
         String key = command.getProperties().get(PropertyType.KEY);
         if (! store.keyExists(key)) {
-            throw new InvalidCommandException("key " + key + " is not existed!");
+            throw new InvalidCommandException("key " + key + " does not exist!");
         }
         DBValue dbValue = store.getDBValueKey(key);
         dbValue.increment();

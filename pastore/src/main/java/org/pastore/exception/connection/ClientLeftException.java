@@ -1,4 +1,4 @@
-package org.pastore.clientexception.connection;
+package org.pastore.exception.connection;
 
 public class ClientLeftException extends ConnectionException {
 

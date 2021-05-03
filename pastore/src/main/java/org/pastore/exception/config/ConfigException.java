@@ -1,6 +1,6 @@
-package org.pastore.clientexception.config;
+package org.pastore.exception.config;
 
-import org.pastore.clientexception.BaseException;
+import org.pastore.exception.BaseException;
 
 public class ConfigException extends BaseException {
 

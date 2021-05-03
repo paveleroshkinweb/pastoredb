@@ -1,6 +1,6 @@
-package org.pastore.clientexception.command;
+package org.pastore.exception.command;
 
-import org.pastore.clientexception.BaseException;
+import org.pastore.exception.BaseException;
 
 public class InvalidCommandException extends BaseException {
 

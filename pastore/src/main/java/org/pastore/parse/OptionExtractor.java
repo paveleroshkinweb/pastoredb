@@ -1,8 +1,8 @@
 package org.pastore.parse;
 
-import org.pastore.clientexception.command.InvalidCommandException;
-import org.pastore.clientexception.command.InvalidOptionException;
-import org.pastore.clientexception.command.UnknownOptionException;
+import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidOptionException;
+import org.pastore.exception.command.UnknownOptionException;
 import org.pastore.command.option.OptionType;
 
 import java.util.HashMap;

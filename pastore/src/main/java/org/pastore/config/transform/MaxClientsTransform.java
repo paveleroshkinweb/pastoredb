@@ -1,6 +1,6 @@
 package org.pastore.config.transform;
 
-import org.pastore.clientexception.config.InvalidConfigPropertyException;
+import org.pastore.exception.config.InvalidConfigPropertyException;
 import org.pastore.config.property.ConfigProperty;
 
 public class MaxClientsTransform implements ITransform<Integer>{

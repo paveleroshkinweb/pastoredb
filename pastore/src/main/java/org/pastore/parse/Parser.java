@@ -6,7 +6,7 @@ import org.pastore.command.CommandType;
 import org.pastore.command.PropertyType;
 import org.pastore.command.format.Format;
 import org.pastore.command.option.OptionType;
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 
 import java.util.HashMap;
 import java.util.Map;

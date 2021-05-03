@@ -1,6 +1,6 @@
 package org.pastore.handle.helper;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 
 public class DataHelper {
 

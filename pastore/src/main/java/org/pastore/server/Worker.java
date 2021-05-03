@@ -3,7 +3,7 @@ package org.pastore.server;
 import org.apache.log4j.Logger;
 import org.pastore.command.Command;
 import org.pastore.command.CommandType;
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.connection.Connection;
 import org.pastore.db.Database;
 import org.pastore.db.Store;

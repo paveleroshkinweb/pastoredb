@@ -1,18 +1,19 @@
 package org.pastore.db.value;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.parse.StrUtils;
 
 import java.util.List;
 
-public class ListIntDBValue extends ListDBValue<Integer> {
+public class ListIntDBValue extends ListDBValue<IntegerDBValue> {
 
-    public ListIntDBValue(List<Integer> value) {
+    public ListIntDBValue(List<IntegerDBValue> value) {
         super(value, DBValueType.LIST_INT);
     }
 
     @Override
-    public Integer cast(String value) throws InvalidCommandException {
-        return StrUtils.parseStringToInt(value);
+    public IntegerDBValue cast(String value) throws InvalidCommandException {
+        Integer intValue = StrUtils.parseStringToInt(value);
+        return new IntegerDBValue(intValue);
     }
 }

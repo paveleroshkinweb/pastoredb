@@ -1,4 +1,4 @@
-package org.pastore.clientexception.config;
+package org.pastore.exception.config;
 
 import org.pastore.config.property.ConfigProperty;
 import org.pastore.logging.LogLevel;

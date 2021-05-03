@@ -6,10 +6,11 @@ import org.pastore.command.PropertyType;
 import org.pastore.connection.Connection;
 import org.pastore.db.Store;
 import org.pastore.db.value.DBValue;
+import org.pastore.parse.StrUtils;
 
 import java.io.IOException;
 
-public class PushCommandHandler implements IHandle {
+public class IndexCommandHandler implements IHandle {
 
     @Override
     public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
@@ -20,7 +21,7 @@ public class PushCommandHandler implements IHandle {
         }
         DBValue dbValue = store.getDBValueKey(key);
         String plainValue = command.getProperties().get(PropertyType.VALUE);
-        dbValue.push(plainValue);
-        connection.setOKResponse();
+        String value = dbValue.index(StrUtils.parseStringToInt(plainValue));
+        connection.setSuccessResponse(value);
     }
 }

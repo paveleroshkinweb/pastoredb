@@ -1,10 +1,10 @@
 package org.pastore.db.value;
 
-import org.pastore.clientexception.command.InvalidCommandException;
+import org.pastore.exception.command.InvalidCommandException;
 
 import java.util.List;
 
-public abstract class ListDBValue<T> extends DBValue<List<T>> {
+public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
 
     public ListDBValue(List<T> value, DBValueType dbValueType) {
         super(value, dbValueType);
@@ -12,17 +12,49 @@ public abstract class ListDBValue<T> extends DBValue<List<T>> {
 
     @Override
     public void push(String value) throws InvalidCommandException {
-        T valueToPush = this.cast(value);
-        this.getValue().add(valueToPush);
+        this.insert(value, this.getValue().size());
     }
 
     @Override
     public String pop() throws InvalidCommandException {
-        if (this.getValue().size() == 0) {
-            throw new InvalidCommandException("List is empty list!");
+        return this.remove(this.getValue().size() - 1);
+    }
+
+    @Override
+    public String shift() throws InvalidCommandException {
+        return this.remove(0);
+    }
+
+    @Override
+    public void unshift(String value) throws InvalidCommandException {
+        this.insert(value, 0);
+    }
+
+    @Override
+    public String size() throws InvalidCommandException {
+        return DBValueType.INTEGER.getPrefix() + ":" + this.getValue().size();
+    }
+
+    @Override
+    public String index(int index) throws InvalidCommandException {
+        try {
+            return this.getValue().get(index).toResponse();
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidCommandException(index + " is bigger then collection size");
         }
-        T lastElement = this.getValue().remove(this.getValue().size() - 1);
-        return lastElement.toString();
+    }
+
+    private void insert(String value, int index) throws InvalidCommandException {
+        T valueToInsert = this.cast(value);
+        this.getValue().add(index, valueToInsert);
+    }
+
+    private String remove(int index) throws InvalidCommandException {
+        if (this.getValue().size() == 0) {
+            throw new InvalidCommandException("List is empty!");
+        }
+        T element = this.getValue().remove(index);
+        return element.toResponse();
     }
 
     public abstract T cast(String value) throws InvalidCommandException;

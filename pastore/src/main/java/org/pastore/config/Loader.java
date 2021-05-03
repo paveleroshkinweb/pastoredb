@@ -2,7 +2,7 @@ package org.pastore.config;
 
 import org.apache.log4j.Logger;
 import org.pastore.config.property.*;
-import org.pastore.clientexception.config.InvalidConfigPropertyException;
+import org.pastore.exception.config.InvalidConfigPropertyException;
 import org.pastore.logging.LoggerLoader;
 import org.pastore.utils.FSHelper;
 

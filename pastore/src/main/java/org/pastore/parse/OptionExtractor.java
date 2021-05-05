@@ -1,19 +1,18 @@
 package org.pastore.parse;
 
+import org.pastore.command.option.OptionType;
+import org.pastore.exception.command.ExtraOptionException;
 import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.exception.command.InvalidOptionException;
 import org.pastore.exception.command.UnknownOptionException;
-import org.pastore.command.option.OptionType;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class OptionExtractor {
 
     public Map<OptionType, String> extractOptions(String text, Set<OptionType> reqOpt, Set<OptionType> posOpt) throws InvalidCommandException {
-        Set<OptionType> missedRequiredOptions = new HashSet<>(reqOpt);
         Map<OptionType, String> options = new HashMap<>();
 
         while (text.length() > 0) {
@@ -25,8 +24,8 @@ public class OptionExtractor {
             if (! reqOpt.contains(type) && ! posOpt.contains(type)) {
                 throw new InvalidOptionException(type);
             }
-            if (reqOpt.contains(type)) {
-                reqOpt.remove(type);
+            if (options.containsKey(type)) {
+                throw new ExtraOptionException(type);
             }
             text = StrUtils.slice(text, optionName.length() + 1);
             String optionValue = StrUtils.stringExtract(optionName, text, '"');

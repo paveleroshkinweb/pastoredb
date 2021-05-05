@@ -40,6 +40,8 @@ public abstract class HandlerFactory {
             handler = new IndexCommandHandler();
         } else if (commandType == CommandType.GET) {
             handler = new GetCommandHandler();
+        } else if (commandType == CommandType.DELETE) {
+            handler = new DeleteCommandHandler();
         }
         handlers.put(commandType, handler);
         return handler;

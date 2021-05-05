@@ -8,22 +8,23 @@ import java.util.stream.Collectors;
 
 public enum CommandType {
 
-    GET("GET", new GetFormat()),
-    SET("SET", new SetFormat()), // +
-    INCREMENT("INCREMENT", new IncrementFormat()), //+
-    EXISTS("EXISTS", new ExistsFormat()), // +
-    INDEX("INDEX", new IndexFormat()), // +
-    SIZE("SIZE", new SizeFormat()), // +
-    PUSH("PUSH", new PushFormat()), // +
-    POP("POP", new PopFormat()), // +
-    SHIFT("SHIFT", new ShiftFormat()), // +
-    UNSHIFT("UNSHIFT", new UnshiftFormat()), // +
-    SUBSCRIBE("SUB", null),
-    UNSUBSCRIBE("UNSUB", null),
-    LOGIN("LOGIN", null),
-    USE("USE", new UseFormat()), // +
-    DB("DB", new DBFormat()), // +
-    EXIT("EXIT", new ExitFormat()); // +
+    GET("GET", new KeyFormat()),
+    SET("SET", new SetFormat()),
+    DELETE("DELETE", new KeyFormat()), //
+    INCREMENT("INCREMENT", new KeyFormat()),
+    EXISTS("EXISTS", new KeyFormat()),
+    INDEX("INDEX", new KeyValueFormat()),
+    SIZE("SIZE", new KeyFormat()),
+    PUSH("PUSH", new KeyValueFormat()),
+    POP("POP", new KeyFormat()),
+    SHIFT("SHIFT", new KeyFormat()),
+    UNSHIFT("UNSHIFT", new KeyValueFormat()),
+    SUBSCRIBE("SUB", null), //
+    UNSUBSCRIBE("UNSUB", null), //
+    LOGIN("LOGIN", null), //
+    USE("USE", new KeyFormat()),
+    DB("DB", new PlainFormat()),
+    EXIT("EXIT", new PlainFormat());
 
     private final String name;
 

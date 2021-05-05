@@ -20,7 +20,7 @@ public class Store {
         this.number = number;
     }
 
-    public DBValue getDBValueKey(String key) {
+    public DBValue getDBValueByKey(String key) {
         return this.store.get(key);
     }
 

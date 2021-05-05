@@ -18,7 +18,7 @@ public class UnshiftCommandHandler implements IHandle {
         if (! store.keyExists(key)) {
             throw new InvalidCommandException("key " + key + " does not exist!");
         }
-        DBValue dbValue = store.getDBValueKey(key);
+        DBValue dbValue = store.getDBValueByKey(key);
         String plainValue = command.getProperties().get(PropertyType.VALUE);
         dbValue.unshift(plainValue);
         connection.setOKResponse();

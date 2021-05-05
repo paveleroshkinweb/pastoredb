@@ -1,15 +1,12 @@
 package org.pastore.command.format;
 
-import org.pastore.command.PropertyType;
 import org.pastore.command.option.OptionType;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SetFormat extends Format {
-
-    private static final PropertyType[] format = { PropertyType.KEY, PropertyType.VALUE };
+public class SetFormat extends KeyValueFormat {
 
     private static final Set<OptionType> reqOptions = new HashSet<>();
 
@@ -18,6 +15,6 @@ public class SetFormat extends Format {
     );
 
     public SetFormat() {
-        super(format, reqOptions, posOptions);
+        super(reqOptions, posOptions);
     }
 }

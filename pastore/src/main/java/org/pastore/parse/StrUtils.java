@@ -68,7 +68,7 @@ public class StrUtils {
         boolean closed = false;
         boolean encodeMode = false;
         while (pointer < text.length()) {
-            if (encodeMode && (text.charAt(pointer) != quote || text.charAt(pointer) != '\\')) {
+            if (encodeMode && (text.charAt(pointer) != quote && text.charAt(pointer) != '\\')) {
                 throw new InvalidCommandException("Please escape \\ symbol!");
             }
             if (encodeMode && (text.charAt(pointer) == quote || text.charAt(pointer) == '\\')) {

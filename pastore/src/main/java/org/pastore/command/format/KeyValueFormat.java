@@ -3,18 +3,17 @@ package org.pastore.command.format;
 import org.pastore.command.PropertyType;
 import org.pastore.command.option.OptionType;
 
-import java.util.HashSet;
 import java.util.Set;
 
-public class PushFormat extends Format {
+public class KeyValueFormat extends PlainFormat {
 
     private static final PropertyType[] format = { PropertyType.KEY, PropertyType.VALUE };
 
-    private static final Set<OptionType> reqOptions = new HashSet<>();
+    public KeyValueFormat() {
+        super(format);
+    }
 
-    private static final Set<OptionType> posOptions = new HashSet<>();
-
-    public PushFormat() {
+    public KeyValueFormat(Set<OptionType> reqOptions, Set<OptionType> posOptions) {
         super(format, reqOptions, posOptions);
     }
 }

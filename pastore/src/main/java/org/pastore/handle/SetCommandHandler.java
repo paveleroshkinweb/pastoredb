@@ -37,7 +37,7 @@ public class SetCommandHandler implements IHandle {
             throw new InvalidCommandException(String.format(INVALID_OPTION, OptionType.TYPE.getName()));
         }
         String plainValue = command.getProperties().get(PropertyType.VALUE);
-        DBValue dbValue = store.getDBValueKey(key);
+        DBValue dbValue = store.getDBValueByKey(key);
         DBValueType type = dbValue.getDbValueType();
         if (type == DBValueType.INTEGER) {
             Integer value = StrUtils.parseStringToInt(plainValue);

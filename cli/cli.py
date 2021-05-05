@@ -13,13 +13,13 @@ if __name__ == '__main__':
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
         client_socket.connect((args.host, args.port))
         while True:
-            try:
+            try:  
                 message = input('Pastore > ')
-                message += delimeter
+                message = repr(message)[1:-1] + delimeter
                 encoded_message = message.encode()
                 client_socket.sendall(encoded_message)
-                response = client_socket.recv(4096)
-                print(response.decode().strip())
+                response = client_socket.recv(4096).decode().strip()
+                print(response)
             except BrokenPipeError:
                 print("server closed connection!")
                 break

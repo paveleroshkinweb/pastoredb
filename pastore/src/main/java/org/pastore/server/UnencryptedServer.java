@@ -3,7 +3,8 @@ package org.pastore.server;
 import org.apache.log4j.Logger;
 import org.pastore.connection.Connection;
 import org.pastore.connection.MessageReader;
-import org.pastore.exception.connection.ConnectionException;
+import org.pastore.exception.connection.ClientLeftException;
+import org.pastore.exception.connection.InvalidProtocolException;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -107,9 +108,12 @@ public class UnencryptedServer extends Server {
                 logger.info("Recieved new commands from: " + connection);
                 workers.execute(new Worker(connection, plainCommand));
             }
-        } catch (ConnectionException e) {
-            logger.info("Connection exception occurred while reading data: " + e.getMessage(), e);
-            this.closeConnection(connectionChannel);
+        } catch (InvalidProtocolException e) {
+            connection.setErrorResponseAndClose(e.getMessage());
+            logger.error(e);
+        } catch (ClientLeftException e) {
+            connection.closeConnection();
+            logger.error(e);
         }
     }
 

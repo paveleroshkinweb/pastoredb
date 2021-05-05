@@ -10,7 +10,7 @@ public enum CommandType {
 
     GET("GET", new KeyFormat()),
     SET("SET", new SetFormat()),
-    DELETE("DELETE", new KeyFormat()), //
+    DELETE("DELETE", new KeyFormat()),
     INCREMENT("INCREMENT", new KeyFormat()),
     EXISTS("EXISTS", new KeyFormat()),
     INDEX("INDEX", new KeyValueFormat()),
@@ -19,8 +19,6 @@ public enum CommandType {
     POP("POP", new KeyFormat()),
     SHIFT("SHIFT", new KeyFormat()),
     UNSHIFT("UNSHIFT", new KeyValueFormat()),
-    SUBSCRIBE("SUB", null), //
-    UNSUBSCRIBE("UNSUB", null), //
     LOGIN("LOGIN", null), //
     USE("USE", new KeyFormat()),
     DB("DB", new PlainFormat()),

@@ -1,7 +1,6 @@
 package org.pastore.connection;
 
 import org.pastore.exception.connection.ClientLeftException;
-import org.pastore.exception.connection.ConnectionException;
 import org.pastore.exception.connection.InvalidProtocolException;
 
 import java.io.IOException;
@@ -26,13 +25,13 @@ public class MessageReader implements IReader {
 
     private ByteBuffer readBuffer;
 
-    public MessageReader(final SocketChannel channel) throws IOException {
+    public MessageReader(final SocketChannel channel) {
         this.channel = channel;
         this.unfinishedMessage = new StringBuilder();
         this.readBuffer = ByteBuffer.allocate(bufferSize);
     }
 
-    public String readCommand() throws ConnectionException, IOException {
+    public String readCommand() throws ClientLeftException, InvalidProtocolException, IOException {
         int read = 0;
         while ((read = channel.read(this.readBuffer)) > 0) {
             this.readBuffer.flip();
@@ -49,7 +48,7 @@ public class MessageReader implements IReader {
         return null;
     }
 
-    private String parse(String newData) throws ConnectionException {
+    private String parse(String newData) throws InvalidProtocolException {
         int delimiterIndex = newData.indexOf(delimiter);
         if (delimiterIndex == -1) {
             unfinishedMessage.append(newData);
@@ -61,10 +60,6 @@ public class MessageReader implements IReader {
         String result = unfinishedMessage.append(newData, 0, newData.length() - 1).toString();
         unfinishedMessage.setLength(0);
         return result;
-    }
-
-    public SocketChannel getChannel() {
-        return channel;
     }
 
 }

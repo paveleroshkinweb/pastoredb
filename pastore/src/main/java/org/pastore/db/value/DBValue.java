@@ -1,12 +1,7 @@
 package org.pastore.db.value;
 
-import org.pastore.exception.command.InvalidCommandException;
 import org.pastore.command.CommandType;
-import org.pastore.connection.Connection;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.pastore.exception.command.InvalidCommandException;
 
 public abstract class DBValue<T> {
 
@@ -16,12 +11,9 @@ public abstract class DBValue<T> {
 
     private DBValueType dbValueType;
 
-    private List<Connection> subscribers;
-
     public DBValue(T value, DBValueType dbValueType) {
         this.value = value;
         this.dbValueType = dbValueType;
-        this.subscribers = Collections.synchronizedList(new ArrayList<>());
     }
 
     public T getValue() {

@@ -1,21 +1,25 @@
 package org.pastore;
 
 import org.apache.log4j.Logger;
-import org.pastore.config.Loader;
+import org.pastore.cli.CLI;
+import org.pastore.cli.CLIOption;
 import org.pastore.config.property.*;
 import org.pastore.db.Database;
+import org.pastore.load.Loader;
 import org.pastore.logging.LoggerLoader;
 import org.pastore.server.Server;
 import org.pastore.server.ServerFactory;
 
+import java.util.Map;
+
 public class Main {
 
     public static void main(String[] args) {
-        String configPath = args.length > 0 ? args[0] : null;
         LoggerLoader.loadDefaultLogger();
 
         try {
-            Loader.load(configPath);
+            Map<CLIOption, Object> options = CLI.parseCLIArguments(args);
+            Loader.load(options);
             ServerTypeProperty serverType = new ServerTypeProperty();
             DumpFileProperty dumpFile = new DumpFileProperty();
             HistoryFileProperty historyFile = new HistoryFileProperty();

@@ -1,7 +1,7 @@
 package org.pastore.config.property;
 
-import org.pastore.config.Loader;
 import org.pastore.config.transform.ITransform;
+import org.pastore.load.Loader;
 
 
 public class Property<T> {

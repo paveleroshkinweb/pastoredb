@@ -140,7 +140,7 @@ public class UnencryptedServer extends Server {
                 channel.close();
                 logger.info("Successfully closed " + remoteAddress);
             } catch (IOException e) {
-                logger.error("Unexpected IOException occurred while closing channel", e);
+                logger.error(e);
             }
         }
     }
@@ -158,7 +158,7 @@ public class UnencryptedServer extends Server {
         try {
             this.channel.close();
         } catch (IOException e) {
-            logger.error("Unexpected IOException occurred while closing sever", e);
+            logger.error(e);
         }
     }
 }

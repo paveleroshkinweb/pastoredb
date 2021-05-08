@@ -48,7 +48,7 @@ public class Worker implements Runnable {
             try {
                 connection.closeConnection();
             } catch (IOException ioException) {
-                logger.error("IOException occurred during closing connection", ioException);
+                logger.error(ioException);
             }
         }
     }

@@ -1,8 +1,9 @@
 package org.pastore.server;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum ServerType {
 
@@ -12,12 +13,9 @@ public enum ServerType {
 
     private final String name;
 
-    private static final Map<String, ServerType> types = new HashMap<>(){
-        {
-            put(ServerType.UNENCRYPTED.getName(), ServerType.UNENCRYPTED);
-            put(ServerType.ENCRYPTED.getName(), ServerType.ENCRYPTED);
-        }
-    };
+    private static final Map<String, ServerType> types = Arrays.stream(ServerType.values()).collect(
+            Collectors.toMap(ServerType::getName, type -> type)
+    );
 
     ServerType(final String name) {
         this.name = name;

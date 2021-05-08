@@ -23,6 +23,6 @@ public class FSHelper {
                 return false;
             }
         }
-        return true;
+        return this.isFileAccessible();
     }
 }

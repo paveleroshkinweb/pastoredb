@@ -1,4 +1,4 @@
-package org.pastore.exception.command;
+package org.pastore.exception.client.command;
 
 import org.pastore.command.option.OptionType;
 

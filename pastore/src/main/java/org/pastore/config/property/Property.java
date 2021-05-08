@@ -2,18 +2,17 @@ package org.pastore.config.property;
 
 import org.pastore.config.Loader;
 import org.pastore.config.transform.ITransform;
-import org.pastore.exception.config.InvalidConfigPropertyException;
 
 
 public class Property<T> {
 
-    private ConfigProperty configProperty;
+    private final ConfigProperty configProperty;
 
-    private String plainValue;
+    private final String plainValue;
 
-    private ITransform<T> transformator;
+    private final ITransform<T> transformator;
 
-    private T defaultValue;
+    private final T defaultValue;
 
     private T value;
 
@@ -26,15 +25,10 @@ public class Property<T> {
     }
 
     public T getValue() {
+        if (this.value == null) {
+            this.value = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
+        }
         return this.value;
-    }
-
-    public void process() throws InvalidConfigPropertyException {
-        this.value = this.transformator.transform(this.configProperty, this.plainValue, this.defaultValue);
-    }
-
-    public void setValue(T value) {
-        this.value = value;
     }
 
     public ConfigProperty getConfigProperty() {

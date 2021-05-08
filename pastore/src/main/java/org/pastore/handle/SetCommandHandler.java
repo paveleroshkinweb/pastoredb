@@ -1,6 +1,6 @@
 package org.pastore.handle;
 
-import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.client.command.InvalidCommandException;
 import org.pastore.command.Command;
 import org.pastore.command.PropertyType;
 import org.pastore.command.option.OptionType;

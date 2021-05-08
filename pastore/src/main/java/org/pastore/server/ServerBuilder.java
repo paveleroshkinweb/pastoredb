@@ -2,7 +2,7 @@ package org.pastore.server;
 
 
 import org.pastore.config.property.*;
-import org.pastore.utils.NotImplementedException;
+import org.pastore.exception.common.NotImplementedException;
 
 import java.io.IOException;
 

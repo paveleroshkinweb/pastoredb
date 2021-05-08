@@ -1,4 +1,4 @@
-package org.pastore.utils;
+package org.pastore.exception.common;
 
 public class NotImplementedException extends RuntimeException {
 

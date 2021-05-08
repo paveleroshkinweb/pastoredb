@@ -105,7 +105,7 @@ public class UnencryptedServer extends Server {
         try {
             String plainCommand = messageReader.readCommand();
             if (plainCommand != null) {
-                logger.info("Recieved new commands from: " + connection);
+                logger.info("Recieved new command from: " + connection);
                 workers.execute(new Worker(connection, plainCommand));
             }
         } catch (InvalidProtocolException e) {

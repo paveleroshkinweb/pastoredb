@@ -1,7 +1,7 @@
 package org.pastore.db.value;
 
 import org.pastore.command.CommandType;
-import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.client.command.InvalidCommandException;
 
 public abstract class DBValue<T> {
 

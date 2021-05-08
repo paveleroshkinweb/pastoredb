@@ -1,5 +1,6 @@
 package org.pastore.connection;
 
+import org.apache.log4j.Logger;
 import org.pastore.exception.connection.ClientLeftException;
 import org.pastore.exception.connection.InvalidProtocolException;
 

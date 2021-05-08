@@ -1,4 +1,4 @@
-package org.pastore.exception.command;
+package org.pastore.exception.client.command;
 
 public class UnbalancedQuotesException extends InvalidCommandException {
 

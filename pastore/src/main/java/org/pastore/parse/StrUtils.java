@@ -1,9 +1,9 @@
 package org.pastore.parse;
 
-import org.pastore.exception.command.EmptyKeyException;
-import org.pastore.exception.command.InvalidCharException;
-import org.pastore.exception.command.InvalidCommandException;
-import org.pastore.exception.command.UnbalancedQuotesException;
+import org.pastore.exception.client.command.EmptyKeyException;
+import org.pastore.exception.client.command.InvalidCharException;
+import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.command.UnbalancedQuotesException;
 import org.pastore.db.value.DBValueType;
 
 import java.util.Arrays;

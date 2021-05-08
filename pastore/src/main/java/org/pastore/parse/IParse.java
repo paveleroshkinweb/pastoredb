@@ -2,7 +2,7 @@ package org.pastore.parse;
 
 import org.pastore.command.Command;
 import org.pastore.command.CommandType;
-import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.client.command.InvalidCommandException;
 
 public interface IParse {
 

@@ -1,6 +1,6 @@
 package org.pastore.db.value;
 
-import org.pastore.exception.command.InvalidCommandException;
+import org.pastore.exception.client.command.InvalidCommandException;
 
 import java.util.List;
 

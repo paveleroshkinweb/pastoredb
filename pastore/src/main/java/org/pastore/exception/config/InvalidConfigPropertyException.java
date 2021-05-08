@@ -7,7 +7,7 @@ import org.pastore.server.ServerType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InvalidConfigPropertyException extends Exception {
+public class InvalidConfigPropertyException extends ConfigException {
 
     private static final Map<ConfigProperty, String> errorMessages = new HashMap<>() {
         {

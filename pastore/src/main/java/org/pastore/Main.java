@@ -16,18 +16,18 @@ public class Main {
 
         try {
             Loader.load(configPath);
-            ServerTypeProperty serverType = Loader.getServerTypeProperty();
-            DumpFileProperty dumpFile = Loader.getDumpFileProperty();
-            HistoryFileProperty historyFile = Loader.getHistoryFileProperty();
-            DatabasesProperty databases = Loader.getDatabasesProperty();
-            SaveIntervalProperty saveInterval = Loader.getSaveIntervalProperty();
+            ServerTypeProperty serverType = new ServerTypeProperty();
+            DumpFileProperty dumpFile = new DumpFileProperty();
+            HistoryFileProperty historyFile = new HistoryFileProperty();
+            DatabasesProperty databases = new DatabasesProperty();
+            SaveIntervalProperty saveInterval = new SaveIntervalProperty();
             Database.init(dumpFile, historyFile, databases, saveInterval);
             try (Server server = ServerFactory.getServer(serverType.getValue())) {
                 server.listen();
             }
         } catch (Exception e) {
             Logger logger = Logger.getLogger(Main.class);
-            logger.error("Unexpected exception occurred", e);
+            logger.error(e);
         }
     }
 }

@@ -2,9 +2,10 @@ package org.pastore.logging;
 
 import org.apache.log4j.Level;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public enum LogLevel {
@@ -14,14 +15,9 @@ public enum LogLevel {
     WARN("warn", Level.WARN),
     ERROR("error", Level.ERROR);
 
-    private static final Map<String, LogLevel> levels = new HashMap<>() {
-        {
-            put(DEBUG.name, DEBUG);
-            put(INFO.name, INFO);
-            put(WARN.name, WARN);
-            put(ERROR.name, ERROR);
-        }
-    };
+    private static final Map<String, LogLevel> levels = Arrays.stream(LogLevel.values()).collect(
+            Collectors.toMap(LogLevel::getName, level -> level)
+    );
 
     private final String name;
 

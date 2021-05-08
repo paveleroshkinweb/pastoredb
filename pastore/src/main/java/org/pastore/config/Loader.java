@@ -1,7 +1,10 @@
 package org.pastore.config;
 
 import org.apache.log4j.Logger;
-import org.pastore.config.property.*;
+import org.pastore.config.property.ConfigProperty;
+import org.pastore.config.property.LogFileProperty;
+import org.pastore.config.property.LogLevelProperty;
+import org.pastore.config.property.Property;
 import org.pastore.exception.config.ConfigLoadedException;
 import org.pastore.exception.config.InvalidConfigPropertyException;
 import org.pastore.logging.LoggerLoader;
@@ -47,7 +50,6 @@ public class Loader {
             }
         }
         loadLogger();
-        loadRestProperties();
         configPath = path;
         isLoaded = true;
     }
@@ -60,76 +62,15 @@ public class Loader {
         return properties.getProperty(key);
     }
 
-    public static BacklogProperty getBacklogProperty() {
-        return (BacklogProperty) instances.get(ConfigProperty.TCP_BACKLOG);
-    }
-
-    public static BindProperty getBindProperty() {
-        return (BindProperty) instances.get(ConfigProperty.BIND);
-    }
-
-    public static DatabasesProperty getDatabasesProperty() {
-        return (DatabasesProperty) instances.get(ConfigProperty.DATABASES);
-    }
-
-    public static DumpFileProperty getDumpFileProperty() {
-        return (DumpFileProperty) instances.get(ConfigProperty.DUMPFILE);
-    }
-
-    public static HistoryFileProperty getHistoryFileProperty() {
-        return (HistoryFileProperty) instances.get(ConfigProperty.HISTORYFILE);
-    }
-
-    public static MaxClientsProperty getMaxClientsProperty() {
-        return (MaxClientsProperty) instances.get(ConfigProperty.MAX_CLIENTS);
-    }
-
-    public static PasswordProtectedProperty getPasswordProtectedProperty() {
-        return (PasswordProtectedProperty) instances.get(ConfigProperty.PASSWORD_PROTECTED);
-    }
-
-    public static PortProperty getPortProperty() {
-        return (PortProperty) instances.get(ConfigProperty.PORT);
-    }
-
-    public static SaveIntervalProperty getSaveIntervalProperty() {
-        return (SaveIntervalProperty) instances.get(ConfigProperty.SAVE);
-    }
-
-    public static ServerTypeProperty getServerTypeProperty() {
-        return (ServerTypeProperty) instances.get(ConfigProperty.SERVER_TYPE);
-    }
-
-    private static void put(Property property) throws InvalidConfigPropertyException {
-        if (! instances.containsKey(property.getConfigProperty())) {
-            instances.put(property.getConfigProperty(), property);
-        }
-    }
-
     private static void loadLogger() {
-        LogFileProperty logFileProperty = new LogFileProperty();
-        LogLevelProperty logLevelProperty = new LogLevelProperty();
-        put(logFileProperty);
-        put(logLevelProperty);
         try {
+            LogFileProperty logFileProperty = new LogFileProperty();
+            LogLevelProperty logLevelProperty = new LogLevelProperty();
             LoggerLoader.loadLogger(logFileProperty, logLevelProperty);
         } catch (InvalidConfigPropertyException e) {
             logger.error(e);
             System.exit(LOGGER_CONFIG_ISSUES_CODE_EXIT);
         }
-    }
-
-    private static void loadRestProperties() {
-        put(new BacklogProperty());
-        put(new BindProperty());
-        put(new DatabasesProperty());
-        put(new DumpFileProperty());
-        put(new HistoryFileProperty());
-        put(new MaxClientsProperty());
-        put(new PasswordProtectedProperty());
-        put(new PortProperty());
-        put(new SaveIntervalProperty());
-        put(new ServerTypeProperty());
     }
 
 }

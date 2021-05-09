@@ -1,6 +1,7 @@
 package org.pastore.handle.helper;
 
 import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.command.InvalidOptionFormatException;
 
 public class DataHelper {
 
@@ -12,7 +13,7 @@ public class DataHelper {
             Integer intExpires = Integer.valueOf(expires);
             return intExpires;
         } catch (NumberFormatException e) {
-            throw new InvalidCommandException(expires + " is not a valid integer!");
+            throw new InvalidOptionFormatException(expires + " is not a valid integer!");
         }
     }
 }

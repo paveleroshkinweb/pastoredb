@@ -7,8 +7,11 @@ import org.pastore.command.option.OptionType;
 import org.pastore.connection.Connection;
 import org.pastore.db.Store;
 import org.pastore.db.value.*;
+import org.pastore.exception.client.command.InvalidOptionException;
 import org.pastore.handle.helper.DataHelper;
 import org.pastore.parse.StrUtils;
+import org.pastore.response.OkResponse;
+import org.pastore.response.Response;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,25 +19,23 @@ import java.util.stream.Collectors;
 
 public class SetCommandHandler implements IHandle {
 
-    private static final String INVALID_OPTION = "%s is not allowed for existing key!";
-
     @Override
-    public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
+    public Response handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
         String key = command.getProperties().get(PropertyType.KEY);
         if (store.keyExists(key)) {
             updateValue(key, command, connection, store);
         } else {
             createNewValue(key, command, connection, store);
         }
-        connection.setOKResponse();
+        return new OkResponse();
     }
 
     private void updateValue(String key, Command command, Connection connection, Store store) throws InvalidCommandException{
         if (command.getOptions().get(OptionType.EXPIRES) != null) {
-            throw new InvalidCommandException(String.format(INVALID_OPTION, OptionType.EXPIRES.getName()));
+            throw new InvalidOptionException(OptionType.EXPIRES);
         }
         if (command.getOptions().get(OptionType.TYPE) != null) {
-            throw new InvalidCommandException(String.format(INVALID_OPTION, OptionType.TYPE.getName()));
+            throw new InvalidOptionException(OptionType.TYPE);
         }
         String plainValue = command.getProperties().get(PropertyType.VALUE);
         DBValue dbValue = store.getDBValueByKey(key);

@@ -6,25 +6,22 @@ import org.pastore.connection.Connection;
 import org.pastore.db.Store;
 import org.pastore.db.value.DBValue;
 import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.command.KeyNotExistException;
+import org.pastore.response.Response;
 
 import java.io.IOException;
 
 public abstract class KeyRequiredCommandHandler implements IHandle {
 
     @Override
-    public void handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
+    public Response handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
         String key = command.getProperties().get(PropertyType.KEY);
         if (! store.keyExists(key)) {
-            throw new InvalidCommandException("key " + key + " does not exist!");
+            throw new KeyNotExistException(key);
         }
         DBValue dbValue = store.getDBValueByKey(key);
-        String response = this.process(dbValue, command, connection, store);
-        if (response == null) {
-            connection.setOKResponse();
-        } else {
-            connection.setSuccessResponse(response);
-        }
+        return this.process(dbValue, command, connection, store);
     }
 
-    public abstract String process(DBValue dbValue, Command command, Connection connection, Store store) throws InvalidCommandException;
+    public abstract Response process(DBValue dbValue, Command command, Connection connection, Store store) throws InvalidCommandException;
 }

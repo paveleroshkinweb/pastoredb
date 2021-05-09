@@ -1,5 +1,7 @@
 package org.pastore.db.value;
 
+import org.pastore.exception.client.command.EmptyListException;
+import org.pastore.exception.client.command.IndexException;
 import org.pastore.exception.client.command.InvalidCommandException;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
         try {
             return this.getValue().get(index).toResponse();
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidCommandException(index + " is bigger then collection size");
+            throw new IndexException();
         }
     }
 
@@ -51,7 +53,7 @@ public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
 
     private String remove(int index) throws InvalidCommandException {
         if (this.getValue().size() == 0) {
-            throw new InvalidCommandException("List is empty!");
+            throw new EmptyListException();
         }
         T element = this.getValue().remove(index);
         return element.toResponse();

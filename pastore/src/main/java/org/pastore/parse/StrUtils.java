@@ -1,9 +1,6 @@
 package org.pastore.parse;
 
-import org.pastore.exception.client.command.EmptyKeyException;
-import org.pastore.exception.client.command.InvalidCharException;
-import org.pastore.exception.client.command.InvalidCommandException;
-import org.pastore.exception.client.command.UnbalancedQuotesException;
+import org.pastore.exception.client.command.*;
 import org.pastore.db.value.DBValueType;
 
 import java.util.Arrays;
@@ -60,7 +57,7 @@ public class StrUtils {
     public static String stringExtract(String name, String text, Character quote) throws InvalidCommandException {
         StringBuilder result = new StringBuilder();
         if (text.charAt(0) != quote) {
-            throw new InvalidCommandException(
+            throw new UnbalancedQuotesException(
                     name + " value should be in " + quote + " quotes and should not contain spaces between elements!"
             );
         }
@@ -69,7 +66,7 @@ public class StrUtils {
         boolean encodeMode = false;
         while (pointer < text.length()) {
             if (encodeMode && (text.charAt(pointer) != quote && text.charAt(pointer) != '\\')) {
-                throw new InvalidCommandException("Please escape \\ symbol!");
+                throw new EscapeException("Please escape \\ symbol!");
             }
             if (encodeMode && (text.charAt(pointer) == quote || text.charAt(pointer) == '\\')) {
                 encodeMode = false;
@@ -89,14 +86,14 @@ public class StrUtils {
             throw new UnbalancedQuotesException(name + " invalid value! Please make sure that you closed " + quote + " quotes!");
         }
         if (result.length() == 0) {
-            throw new InvalidCommandException(name + " can't be empty!");
+            throw new EmptyKeyException(name);
         }
         return result.toString();
     }
 
     public static List<Integer> parseStringToIntList(String text) throws InvalidCommandException{
         if (text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
-            throw new InvalidCommandException("Array must be wrapped with []");
+            throw new ArrayFormatException();
         }
         List<Integer> results = new LinkedList<>();
         text = text.substring(1, text.length()-1);
@@ -110,7 +107,7 @@ public class StrUtils {
 
     public static List<String> parseStringToStrList(String text) throws InvalidCommandException {
         if (text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
-            throw new InvalidCommandException("Array must be wrapped with []");
+            throw new ArrayFormatException();
         }
         List<String> results = new LinkedList<>();
         text = text.substring(1, text.length()-1);
@@ -127,7 +124,7 @@ public class StrUtils {
             Integer value = Integer.valueOf(text);
             return value;
         } catch (NumberFormatException e) {
-            throw new InvalidCommandException(String.format(INVALID_INT, text));
+            throw new InvalidOptionFormatException(String.format(INVALID_INT, text));
         }
     }
 
@@ -143,7 +140,7 @@ public class StrUtils {
             Integer value = Integer.valueOf(strToProcess);
             return value;
         } catch (NumberFormatException e) {
-            throw new InvalidCommandException(strToProcess + " is not a valid integer");
+            throw new InvalidOptionFormatException(String.format(INVALID_INT, strToProcess));
         }
     }
 

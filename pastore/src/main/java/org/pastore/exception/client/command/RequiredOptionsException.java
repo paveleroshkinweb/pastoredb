@@ -8,7 +8,9 @@ public class RequiredOptionsException extends InvalidCommandException {
 
     private static final String MESSAGE = "Missed required options: %s";
 
+    private static final int CODE = 4;
+
     public RequiredOptionsException(Set<OptionType> missedOptions) {
-        super(String.format(MESSAGE, missedOptions.toString()));
+        super(String.format(MESSAGE, missedOptions.toString()), CODE);
     }
 }

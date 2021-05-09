@@ -69,7 +69,7 @@ public class Connection {
     }
 
     public void setOKResponse() throws IOException{
-        this.setResponse("+OK");
+        this.setSuccessResponse("OK");
     }
 
     public void setErrorResponse(String response) throws IOException {

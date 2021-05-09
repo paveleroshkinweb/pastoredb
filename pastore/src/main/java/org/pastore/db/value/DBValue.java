@@ -2,6 +2,7 @@ package org.pastore.db.value;
 
 import org.pastore.command.CommandType;
 import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.command.NotAllowedCommandException;
 
 public abstract class DBValue<T> {
 
@@ -37,51 +38,30 @@ public abstract class DBValue<T> {
     }
 
     public void increment() throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                    INVALID_COMMAND,
-                    CommandType.INCREMENT.getName(),
-                    this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.INCREMENT, this.dbValueType);
     }
 
     public void push(String value) throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.PUSH.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.PUSH, this.dbValueType);
     }
 
     public String pop() throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.POP.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.POP, this.dbValueType);
     }
 
     public String shift() throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.SHIFT.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.SHIFT, this.dbValueType);
     }
 
     public void unshift(String value) throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.UNSHIFT.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.UNSHIFT, this.dbValueType);
     }
 
     public String size() throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.SIZE.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.SIZE, this.dbValueType);
     }
 
     public String index(int index) throws InvalidCommandException {
-        throw new InvalidCommandException(String.format(
-                INVALID_COMMAND,
-                CommandType.INDEX.getName(),
-                this.dbValueType.getPrefix()));
+        throw new NotAllowedCommandException(CommandType.INDEX, this.dbValueType);
     }
 }

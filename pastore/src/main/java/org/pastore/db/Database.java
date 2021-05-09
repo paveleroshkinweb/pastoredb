@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Database {
 
-    private static Database instance;
+    private static volatile Database instance;
 
     private static ScheduledExecutorService executor;
 

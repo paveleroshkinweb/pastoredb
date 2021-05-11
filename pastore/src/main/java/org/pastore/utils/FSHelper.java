@@ -15,6 +15,10 @@ public class FSHelper {
         return this.file.exists() && this.file.canWrite();
     }
 
+    public boolean isEmpty() {
+        return this.file.length() == 0;
+    }
+
     public boolean createIfNotExist() {
         if (!this.file.exists()) {
             try {

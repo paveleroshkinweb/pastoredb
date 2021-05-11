@@ -6,8 +6,6 @@ import org.pastore.exception.client.command.NotAllowedCommandException;
 
 public abstract class DBValue<T> {
 
-    private static final String INVALID_COMMAND = "%s is not allowed for type %s";
-
     private T value;
 
     private DBValueType dbValueType;
@@ -64,4 +62,5 @@ public abstract class DBValue<T> {
     public String index(int index) throws ClientException {
         throw new NotAllowedCommandException(CommandType.INDEX, this.dbValueType);
     }
+
 }

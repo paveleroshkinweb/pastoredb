@@ -9,7 +9,8 @@ public enum DBValueType {
     STRING("S"),
     INTEGER("I"),
     LIST_STR("LS"),
-    LIST_INT("LI");
+    LIST_INT("LI"),
+    NULL("NULL");
 
     private final String prefix;
 

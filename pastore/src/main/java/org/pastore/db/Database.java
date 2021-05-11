@@ -2,7 +2,9 @@ package org.pastore.db;
 
 import org.pastore.config.property.DatabasesProperty;
 import org.pastore.config.property.HistoryFileProperty;
+import org.pastore.db.job.ExpireJob;
 import org.pastore.db.store.Store;
+import org.pastore.utils.FSHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +29,12 @@ public class Database implements IDatabase {
     }
 
     private void init() {
-        this.db = new ArrayList<>();
-        for (int i = 0; i < databases.getValue(); i++) {
-            db.add(new Store(this, i));
+        FSHelper history = new FSHelper(historyFile.getValue());
+        if (history.isEmpty()) {
+            this.db = new ArrayList<>();
+            for (int i = 0; i < databases.getValue(); i++) {
+                db.add(new Store(this, i));
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 package org.pastore.exception.client;
 
-public class ClientException  extends Exception {
+public class ClientException extends Exception {
 
     private static final String delimiter = "::";
 

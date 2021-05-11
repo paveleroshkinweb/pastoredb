@@ -4,7 +4,7 @@ import org.pastore.parse.ExtractorType;
 
 public enum PropertyType {
 
-    KEY(ExtractorType.KEY, "key"),
+    KEY(ExtractorType.STRING, "key"),
     VALUE(ExtractorType.STRING, "value");
 
     private final ExtractorType extractorType;

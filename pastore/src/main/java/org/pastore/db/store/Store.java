@@ -1,11 +1,14 @@
-package org.pastore.db;
+package org.pastore.db.store;
 
+import org.pastore.db.IDatabase;
 import org.pastore.db.value.DBValue;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Store {
+
+    private IDatabase database;
 
     private int number;
 
@@ -15,7 +18,8 @@ public class Store {
         this.store = store;
     }
 
-    public Store(final int number) {
+    public Store(final IDatabase database, final int number) {
+        this.database = database;
         this.store = new ConcurrentHashMap<>();
         this.number = number;
     }
@@ -42,10 +46,14 @@ public class Store {
     }
 
     public void setExpires(String key, int expires) {
-        Database.getInstance().setExpires(key, expires, this.number);
+        database.setExpires(key, expires, this.number);
     }
 
     public int getNumber() {
         return this.number;
+    }
+
+    public IDatabase getDatabase() {
+        return database;
     }
 }

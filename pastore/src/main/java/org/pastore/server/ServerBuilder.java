@@ -20,6 +20,10 @@ public class ServerBuilder {
 
     private BacklogProperty backlog;
 
+    private HistoryFileProperty historyFile;
+
+    private DatabasesProperty databases;
+
     public ServerBuilder setServerType(ServerType serverType) {
         this.serverType = serverType;
         return this;
@@ -50,6 +54,16 @@ public class ServerBuilder {
         return this;
     }
 
+    public ServerBuilder setHistoryFile(HistoryFileProperty historyFile) {
+        this.historyFile = historyFile;
+        return this;
+    }
+
+    public ServerBuilder setDatabases(DatabasesProperty databases) {
+        this.databases = databases;
+        return this;
+    }
+
     public ServerType getServerType() {
         return serverType;
     }
@@ -72,6 +86,14 @@ public class ServerBuilder {
 
     public BacklogProperty getBacklog() {
         return backlog;
+    }
+
+    public HistoryFileProperty getHistoryFile() {
+        return historyFile;
+    }
+
+    public DatabasesProperty getDatabases() {
+        return databases;
     }
 
     public Server build() throws NotImplementedException, IOException {

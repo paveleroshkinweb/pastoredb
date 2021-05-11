@@ -16,6 +16,8 @@ public class ServerFactory {
         MaxClientsProperty maxClients = new MaxClientsProperty();
         PasswordProtectedProperty isPasswordProtected = new PasswordProtectedProperty();
         BacklogProperty backlog = new BacklogProperty();
+        HistoryFileProperty historyFile = new HistoryFileProperty();
+        DatabasesProperty databases = new DatabasesProperty();
         return new ServerBuilder()
                     .setServerType(serverType)
                     .setBindAddress(bindAddress)
@@ -23,6 +25,8 @@ public class ServerFactory {
                     .setMaxClients(maxClients)
                     .setPasswordProtected(isPasswordProtected)
                     .setBacklog(backlog)
+                    .setHistoryFile(historyFile)
+                    .setDatabases(databases)
                     .build();
     }
 }

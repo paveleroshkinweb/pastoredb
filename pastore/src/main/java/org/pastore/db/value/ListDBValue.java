@@ -1,8 +1,8 @@
 package org.pastore.db.value;
 
+import org.pastore.exception.client.ClientException;
 import org.pastore.exception.client.command.EmptyListException;
 import org.pastore.exception.client.command.IndexException;
-import org.pastore.exception.client.command.InvalidCommandException;
 
 import java.util.List;
 
@@ -13,32 +13,32 @@ public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
     }
 
     @Override
-    public void push(String value) throws InvalidCommandException {
+    public void push(String value) throws ClientException {
         this.insert(value, this.getValue().size());
     }
 
     @Override
-    public String pop() throws InvalidCommandException {
+    public String pop() throws ClientException {
         return this.remove(this.getValue().size() - 1);
     }
 
     @Override
-    public String shift() throws InvalidCommandException {
+    public String shift() throws ClientException {
         return this.remove(0);
     }
 
     @Override
-    public void unshift(String value) throws InvalidCommandException {
+    public void unshift(String value) throws ClientException {
         this.insert(value, 0);
     }
 
     @Override
-    public String size() throws InvalidCommandException {
+    public String size() throws ClientException {
         return DBValueType.INTEGER.getPrefix() + ":" + this.getValue().size();
     }
 
     @Override
-    public String index(int index) throws InvalidCommandException {
+    public String index(int index) throws ClientException {
         try {
             return this.getValue().get(index).toResponse();
         } catch (IndexOutOfBoundsException e) {
@@ -46,12 +46,12 @@ public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
         }
     }
 
-    private void insert(String value, int index) throws InvalidCommandException {
+    private void insert(String value, int index) throws ClientException {
         T valueToInsert = this.cast(value);
         this.getValue().add(index, valueToInsert);
     }
 
-    private String remove(int index) throws InvalidCommandException {
+    private String remove(int index) throws ClientException {
         if (this.getValue().size() == 0) {
             throw new EmptyListException();
         }
@@ -59,5 +59,5 @@ public abstract class ListDBValue<T extends DBValue> extends DBValue<List<T>> {
         return element.toResponse();
     }
 
-    public abstract T cast(String value) throws InvalidCommandException;
+    public abstract T cast(String value) throws ClientException;
 }

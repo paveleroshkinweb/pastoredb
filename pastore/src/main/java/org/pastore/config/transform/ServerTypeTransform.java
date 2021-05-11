@@ -6,6 +6,8 @@ import org.pastore.server.ServerType;
 
 public class ServerTypeTransform implements ITransform<ServerType> {
 
+    private static final String ERROR = "Please make sure that " + ConfigProperty.SERVER_TYPE.getPropertyName() +
+                                        " is one of " + ServerType.availableServerTypes();
     @Override
     public ServerType transform(ConfigProperty property, String plainValue, ServerType defaultValue) throws InvalidConfigPropertyException {
         if (plainValue == null) {
@@ -13,7 +15,7 @@ public class ServerTypeTransform implements ITransform<ServerType> {
         }
         ServerType serverType = ServerType.getServerTypeByName(plainValue);
         if (serverType == null) {
-            throw new InvalidConfigPropertyException(property);
+            throw new InvalidConfigPropertyException(ERROR);
         }
         return serverType;
     }

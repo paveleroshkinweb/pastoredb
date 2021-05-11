@@ -1,7 +1,13 @@
 package org.pastore.parse;
 
+import org.pastore.exception.client.ClientException;
 import org.pastore.exception.client.command.*;
 import org.pastore.db.value.DBValueType;
+import org.pastore.exception.client.format.ArrayFormatException;
+import org.pastore.exception.client.required.EmptyKeyException;
+import org.pastore.exception.client.format.EscapeException;
+import org.pastore.exception.client.format.InvalidCharException;
+import org.pastore.exception.client.format.UnbalancedQuotesException;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -36,7 +42,7 @@ public class StrUtils {
         return text.substring(startIndex);
     }
 
-    public static String keyNameExtract(String text, Character stopCharacter) throws InvalidCommandException {
+    public static String keyNameExtract(String text, Character stopCharacter) throws ClientException {
         StringBuilder result = new StringBuilder();
         int pointer = 0;
         while (pointer < text.length() && text.charAt(pointer) != stopCharacter) {
@@ -54,11 +60,11 @@ public class StrUtils {
         return result.toString();
     }
 
-    public static String stringExtract(String name, String text, Character quote) throws InvalidCommandException {
+    public static ExtractionResult stringExtract(String name, String text, Character quote) throws ClientException {
         StringBuilder result = new StringBuilder();
         if (text.charAt(0) != quote) {
             throw new UnbalancedQuotesException(
-                    name + " value should be in " + quote + " quotes and should not contain spaces between elements!"
+                    name + " value should be in " + quote + " quotes"
             );
         }
         int pointer = 1;
@@ -73,6 +79,8 @@ public class StrUtils {
             }
             else if (text.charAt(pointer) == '\\') {
                 encodeMode = true;
+                pointer++;
+                continue;
             }
             else if (text.charAt(pointer) == quote && ! encodeMode) {
                 closed = true;
@@ -88,47 +96,49 @@ public class StrUtils {
         if (result.length() == 0) {
             throw new EmptyKeyException(name);
         }
-        return result.toString();
+        return new ExtractionResult(result.toString(), slice(text, pointer));
     }
 
-    public static List<Integer> parseStringToIntList(String text) throws InvalidCommandException{
+    public static List<Integer> parseStringToIntList(String text) throws ClientException {
         if (text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
             throw new ArrayFormatException();
         }
         List<Integer> results = new LinkedList<>();
         text = text.substring(1, text.length()-1);
         while (text.length() > 0) {
+            text = skipSpaces(text);
             Integer nextInt = parseNextIntInArray(text);
             results.add(nextInt);
-            text = StrUtils.slice(text, String.valueOf(nextInt).length() + 1);
+            text = skipSpaces(slice(text, String.valueOf(nextInt).length() + 1));
         }
         return results;
     }
 
-    public static List<String> parseStringToStrList(String text) throws InvalidCommandException {
+    public static List<String> parseStringToStrList(String text) throws ClientException {
         if (text.charAt(0) != '[' || text.charAt(text.length() - 1) != ']') {
             throw new ArrayFormatException();
         }
         List<String> results = new LinkedList<>();
         text = text.substring(1, text.length()-1);
         while (text.length() > 0) {
-            String nextStr = StrUtils.stringExtract(DBValueType.LIST_STR .getPrefix() + " elements", text, '\'');
-            results.add(nextStr);
-            text = StrUtils.slice(text, nextStr.length() + 3);
+            text = skipSpaces(text);
+            ExtractionResult extractionResult = stringExtract(DBValueType.LIST_STR .getPrefix() + " elements", text, '\'');
+            results.add(extractionResult.getValue());
+            text = skipSpaces(slice(extractionResult.getUpdatedString(), 1));
         }
         return results;
     }
 
-    public static Integer parseStringToInt(String text) throws InvalidCommandException {
+    public static Integer parseStringToInt(String text) throws ClientException {
         try {
             Integer value = Integer.valueOf(text);
             return value;
         } catch (NumberFormatException e) {
-            throw new InvalidOptionFormatException(String.format(INVALID_INT, text));
+            throw new InvalidIntegerException(String.format(INVALID_INT, text));
         }
     }
 
-    private static Integer parseNextIntInArray(String text) throws InvalidCommandException {
+    private static Integer parseNextIntInArray(String text) throws ClientException {
         int commaIndex = text.indexOf(",");
         String strToProcess;
         if (commaIndex == -1) {
@@ -140,7 +150,7 @@ public class StrUtils {
             Integer value = Integer.valueOf(strToProcess);
             return value;
         } catch (NumberFormatException e) {
-            throw new InvalidOptionFormatException(String.format(INVALID_INT, strToProcess));
+            throw new InvalidIntegerException(String.format(INVALID_INT, strToProcess));
         }
     }
 

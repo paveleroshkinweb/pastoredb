@@ -1,8 +1,8 @@
 package org.pastore.response;
 
-public class OkResponse extends Response {
+public class OkResponse extends SuccessResponse {
 
     public OkResponse() {
-        super(ResponseType.OK, null);
+        super(ResponseType.OK, "OK");
     }
 }

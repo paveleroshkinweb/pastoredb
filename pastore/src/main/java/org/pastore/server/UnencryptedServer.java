@@ -2,9 +2,17 @@ package org.pastore.server;
 
 import org.apache.log4j.Logger;
 import org.pastore.connection.Connection;
-import org.pastore.connection.MessageReader;
-import org.pastore.exception.connection.ClientLeftException;
+import org.pastore.connection.IReader;
+import org.pastore.connection.RawCommandReader;
+import org.pastore.db.Database;
+import org.pastore.db.IDatabase;
+import org.pastore.exception.connection.ConnectionException;
 import org.pastore.exception.connection.InvalidProtocolException;
+import org.pastore.handle.factory.HandlerFactory;
+import org.pastore.response.FailResponse;
+import org.pastore.server.middleware.AuthMiddleware;
+import org.pastore.server.middleware.Middleware;
+import org.pastore.server.worker.Worker;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -33,10 +41,15 @@ public class UnencryptedServer extends Server {
 
     private Map<SocketChannel, Connection> connections;
 
-    private final ExecutorService workers = Executors.newSingleThreadExecutor();
+    private Middleware middlewareChain;
+
+    private ExecutorService workers = Executors.newSingleThreadExecutor();
+
+    private IDatabase database;
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
+        this.database = new Database(this.getHistoryFile(), this.getDatabases());
         this.channel = ServerSocketChannel.open();
         this.serverSocket = this.channel.socket();
         this.serverSocket.setReuseAddress(true);
@@ -45,6 +58,7 @@ public class UnencryptedServer extends Server {
         this.selector = Selector.open();
         this.channel.register(selector, SelectionKey.OP_ACCEPT);
         this.connections = new HashMap<>();
+        this.setWorkerMiddlewareChain();
     }
 
     public void listen() {
@@ -79,6 +93,10 @@ public class UnencryptedServer extends Server {
         }
     }
 
+    private void setWorkerMiddlewareChain() {
+        this.middlewareChain = new AuthMiddleware();
+    }
+
     private void acceptNewClient(SelectionKey key) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel connectionChannel = server.accept();
@@ -86,7 +104,7 @@ public class UnencryptedServer extends Server {
         connectionChannel.register(key.selector(), SelectionKey.OP_READ);
         logger.info("New client " + connectionChannel.getRemoteAddress() + " connected!");
 
-        MessageReader messageReader = new MessageReader(connectionChannel);
+        RawCommandReader messageReader = new RawCommandReader(connectionChannel);
         Connection newConnection = new Connection(connectionChannel,
                                                   this.selector,
                                                   messageReader,
@@ -94,24 +112,29 @@ public class UnencryptedServer extends Server {
         this.connections.put(connectionChannel, newConnection);
 
         if (this.connections.size() > this.getMaxClients().getValue()) {
-            newConnection.setErrorResponseAndClose("Can't accept new connection due to limited connection number");
+            this.closeConnection(connectionChannel);
         }
     }
 
     private void readData(SelectionKey key) throws IOException {
         SocketChannel connectionChannel = (SocketChannel) key.channel();
         Connection connection = this.connections.get(connectionChannel);
-        MessageReader messageReader = connection.getMessageReader();
+        IReader messageReader = connection.getMessageReader();
         try {
             String plainCommand = messageReader.readCommand();
             if (plainCommand != null) {
                 logger.info("Recieved new command from: " + connection);
-                workers.execute(new Worker(connection, plainCommand));
+                workers.execute(new Worker(this.database,
+                                           connection,
+                                           plainCommand,
+                                           HandlerFactory.getInstance(),
+                                           this.middlewareChain));
             }
         } catch (InvalidProtocolException e) {
-            connection.setErrorResponseAndClose(e.getMessage());
+            FailResponse response = new FailResponse(e.getMessage());
+            connection.setResponseAndClose(response);
             logger.error(e);
-        } catch (ClientLeftException e) {
+        } catch (ConnectionException e) {
             connection.closeConnection();
             logger.error(e);
         }
@@ -120,7 +143,7 @@ public class UnencryptedServer extends Server {
     private void writeData(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
         Connection connection = this.connections.get(socketChannel);
-        if (connection.getResponse() == null) {
+        if (connection.isClosed()) {
             this.closeConnection(socketChannel);
             return;
         }
@@ -160,5 +183,11 @@ public class UnencryptedServer extends Server {
         } catch (IOException e) {
             logger.error(e);
         }
+        try {
+            this.database.close();
+        } catch (IOException e) {
+            logger.error(e);
+        }
+
     }
 }

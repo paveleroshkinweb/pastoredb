@@ -1,6 +1,6 @@
 package org.pastore.db.value;
 
-import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.ClientException;
 
 public class IntegerDBValue extends DBValue<Integer> {
 
@@ -9,7 +9,7 @@ public class IntegerDBValue extends DBValue<Integer> {
     }
 
     @Override
-    public void increment() throws InvalidCommandException {
+    public void increment() throws ClientException {
         this.setValue(this.getValue() + 1);
     }
 }

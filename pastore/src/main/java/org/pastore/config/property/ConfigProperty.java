@@ -4,7 +4,6 @@ public enum ConfigProperty {
 
     SERVER_TYPE("server-type"),
     MAX_CLIENTS("maxclients"),
-    DUMPFILE("dumpfile"),
     LOGFILE("logfile"),
     HISTORYFILE("historyfile"),
     BIND("bind"),

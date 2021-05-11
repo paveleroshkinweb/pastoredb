@@ -7,6 +7,10 @@ import org.pastore.logging.LogLevel;
 
 public class LogLevelTransform implements ITransform<LogLevel> {
 
+    private static final String ERROR = "Please make sure that " +
+                                        ConfigProperty.LOG_LEVEL.getPropertyName() +
+                                        " is one of " + LogLevel.availableLogLevels();
+
     @Override
     public LogLevel transform(ConfigProperty property, String plainValue, LogLevel defaultValue) throws InvalidConfigPropertyException {
         if (plainValue == null) {
@@ -14,7 +18,7 @@ public class LogLevelTransform implements ITransform<LogLevel> {
         }
         LogLevel logLevel = LogLevel.getLevelByName(plainValue);
         if (logLevel == null) {
-            throw new InvalidConfigPropertyException(property);
+            throw new InvalidConfigPropertyException(ERROR);
         }
         return logLevel;
     }

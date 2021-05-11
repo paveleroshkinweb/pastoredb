@@ -1,18 +1,21 @@
 package org.pastore.db;
 
+import org.pastore.db.store.Store;
+
 public class ExpireJob implements Runnable {
+
+    private final Store store;
 
     private final String key;
 
-    private final int storeNumber;
 
-    public ExpireJob(String key, int storeNumber) {
+    public ExpireJob(Store store, String key) {
+        this.store = store;
         this.key = key;
-        this.storeNumber = storeNumber;
     }
 
     @Override
     public void run() {
-        Database.getInstance().getStoreByIndex(this.storeNumber).removeValueByKey(this.key);
+        store.removeValueByKey(key);
     }
 }

@@ -2,14 +2,14 @@ package org.pastore.parse;
 
 import org.pastore.command.Command;
 import org.pastore.command.CommandType;
-import org.pastore.exception.client.command.InvalidCommandException;
-import org.pastore.exception.client.command.UnknownCommandException;
+import org.pastore.exception.client.ClientException;
+import org.pastore.exception.client.unknown.UnknownCommandException;
 
 public class CommandParser {
 
     private static final IParse parser = new Parser();
 
-    public static Command parseTextToCommand(String text) throws InvalidCommandException {
+    public static Command parseTextToCommand(String text) throws ClientException {
         String trimmedText = text.trim();
         String plainCommand = getPlainCommand(trimmedText);
         CommandType commandType = CommandType.getCommandByName(plainCommand);

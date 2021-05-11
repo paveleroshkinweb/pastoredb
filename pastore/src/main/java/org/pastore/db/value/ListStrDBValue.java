@@ -1,6 +1,6 @@
 package org.pastore.db.value;
 
-import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.ClientException;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class ListStrDBValue extends ListDBValue<StringDBValue> {
     }
 
     @Override
-    public StringDBValue cast(String value) throws InvalidCommandException {
+    public StringDBValue cast(String value) throws ClientException {
         return new StringDBValue(value);
     }
 }

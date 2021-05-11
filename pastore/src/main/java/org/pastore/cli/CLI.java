@@ -16,7 +16,7 @@ public class CLI {
         Map<CLIOption, Object> arguments = new HashMap<>();
         Options options = new Options();
 
-        Option loaderTypeOption = new Option("t", "loadType", true, "Loader type");
+        Option loaderTypeOption = new Option("l", "loadType", true, "Loader type");
         loaderTypeOption.setArgs(1);
         loaderTypeOption.setArgName(CLIOption.LOAD_TYPE.getOptionName());
         loaderTypeOption.setOptionalArg(true);

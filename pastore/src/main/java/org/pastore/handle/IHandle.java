@@ -1,16 +1,16 @@
 package org.pastore.handle;
 
 import org.pastore.command.Command;
-import org.pastore.exception.client.command.InvalidCommandException;
 import org.pastore.connection.Connection;
-import org.pastore.db.Store;
+import org.pastore.db.store.Store;
+import org.pastore.exception.client.ClientException;
 import org.pastore.response.Response;
 
 import java.io.IOException;
 
 public interface IHandle {
 
-    Response handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException;
+    Response handle(Command command, Connection connection, Store store) throws IOException, ClientException;
 
 
 }

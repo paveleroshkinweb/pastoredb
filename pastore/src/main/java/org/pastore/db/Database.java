@@ -1,9 +1,8 @@
 package org.pastore.db;
 
 import org.pastore.config.property.DatabasesProperty;
-import org.pastore.config.property.DumpFileProperty;
 import org.pastore.config.property.HistoryFileProperty;
-import org.pastore.config.property.SaveIntervalProperty;
+import org.pastore.db.store.Store;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,53 +10,27 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Database {
+public class Database implements IDatabase {
 
-    private static volatile Database instance;
-
-    private static ScheduledExecutorService executor;
+    private static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     private List<Store> db;
-
-    private DumpFileProperty dumpFile;
 
     private HistoryFileProperty historyFile;
 
     private DatabasesProperty databases;
 
-    private SaveIntervalProperty saveInterval;
-
-    private Database(List<Store> db,
-                     DumpFileProperty dumpFile,
-                     HistoryFileProperty historyFile,
-                     DatabasesProperty databases,
-                     SaveIntervalProperty saveInterval) {
-        this.db = db;
-        this.dumpFile = dumpFile;
+    public Database(HistoryFileProperty historyFile, DatabasesProperty databases) {
         this.historyFile = historyFile;
         this.databases = databases;
-        this.saveInterval = saveInterval;
+        this.init();
     }
 
-    private static List<Store> readDump(DumpFileProperty dumpFile, DatabasesProperty databases) {
-        List<Store> db = new ArrayList<>();
+    private void init() {
+        this.db = new ArrayList<>();
         for (int i = 0; i < databases.getValue(); i++) {
-            db.add(new Store(i));
+            db.add(new Store(this, i));
         }
-        return db;
-    }
-
-    public static void init(DumpFileProperty dumpFile,
-                            HistoryFileProperty historyFile,
-                            DatabasesProperty databases,
-                            SaveIntervalProperty saveInterval) {
-        List<Store> db = readDump(dumpFile, databases);
-        instance = new Database(db, dumpFile, historyFile, databases, saveInterval);
-        executor = Executors.newSingleThreadScheduledExecutor();
-    }
-
-    public static Database getInstance() {
-        return instance;
     }
 
     public Store getStoreByIndex(int index) {
@@ -65,7 +38,7 @@ public class Database {
     }
 
     public void setExpires(String key, int expires, int storeNumber) {
-        executor.schedule(new ExpireJob(key, storeNumber), expires, TimeUnit.SECONDS);
+        executor.schedule(new ExpireJob(this.getStoreByIndex(storeNumber), key), expires, TimeUnit.SECONDS);
     }
 
     public void shutdownTimers() {
@@ -74,5 +47,10 @@ public class Database {
 
     public int getStoresNumber() {
         return this.db.size();
+    }
+
+    @Override
+    public void close()  {
+      this.shutdownTimers();
     }
 }

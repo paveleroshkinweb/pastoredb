@@ -6,7 +6,9 @@ import org.pastore.config.property.ConfigProperty;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
-public class BindTransform implements ITransform<String>{
+public class AddressTransform implements ITransform<String> {
+
+    private static final String ERROR = "Please make sure that %s is a correct IPv4 address";
 
     @Override
     public String transform(ConfigProperty property, String plainValue, String defaultValue)
@@ -15,7 +17,7 @@ public class BindTransform implements ITransform<String>{
             return defaultValue;
         }
         if (!isValidInet4Address(plainValue)) {
-            throw new InvalidConfigPropertyException(property);
+            throw new InvalidConfigPropertyException(String.format(ERROR, property.getPropertyName()));
         }
         return plainValue;
     }

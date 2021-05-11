@@ -18,6 +18,10 @@ public abstract class Server implements Closeable {
 
     private BacklogProperty backlog;
 
+    private HistoryFileProperty historyFile;
+
+    private DatabasesProperty databases;
+
     public Server(ServerBuilder builder) {
         this.serverType = builder.getServerType();
         this.bindAddress = builder.getBindAddress();
@@ -25,6 +29,8 @@ public abstract class Server implements Closeable {
         this.maxClients = builder.getMaxClients();
         this.isPasswordProtected = builder.isPasswordProtected();
         this.backlog = builder.getBacklog();
+        this.historyFile = builder.getHistoryFile();
+        this.databases = builder.getDatabases();
     }
 
     public abstract void listen();
@@ -53,4 +59,11 @@ public abstract class Server implements Closeable {
         return backlog;
     }
 
+    public HistoryFileProperty getHistoryFile() {
+        return historyFile;
+    }
+
+    public DatabasesProperty getDatabases() {
+        return databases;
+    }
 }

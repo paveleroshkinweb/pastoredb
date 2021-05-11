@@ -28,31 +28,12 @@ public class Command {
         return commandType;
     }
 
-    public void setCommandType(CommandType commandType) {
-        this.commandType = commandType;
-    }
-
     public Map<PropertyType, String> getProperties() {
         return properties;
-    }
-
-    public void setProperties(Map<PropertyType, String> properties) {
-        this.properties = properties;
     }
 
     public Map<OptionType, String> getOptions() {
         return options;
     }
 
-    public void setOptions(Map<OptionType, String> options) {
-        this.options = options;
-    }
-
-    public String getPlainCommand() {
-        return plainCommand;
-    }
-
-    public void setPlainCommand(String plainCommand) {
-        this.plainCommand = plainCommand;
-    }
 }

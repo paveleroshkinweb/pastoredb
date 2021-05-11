@@ -5,9 +5,9 @@ import org.pastore.command.CommandType;
 import org.pastore.command.PropertyType;
 import org.pastore.command.format.Format;
 import org.pastore.command.option.OptionType;
-import org.pastore.exception.client.command.InvalidCommandException;
-import org.pastore.exception.client.command.MissingPropertyException;
-import org.pastore.exception.client.command.RequiredOptionsException;
+import org.pastore.exception.client.ClientException;
+import org.pastore.exception.client.required.MissingPropertyException;
+import org.pastore.exception.client.required.RequiredOptionsException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class Parser implements IParse {
 
-    public Command parse(CommandType commandType, String plainValue) throws InvalidCommandException {
+    public Command parse(CommandType commandType, String plainValue) throws ClientException {
         Format format = commandType.getFormat();
         PropertyType[] types = format.getFormat();
         String text = StrUtils.skipSpaces(StrUtils.skipWord(plainValue));

@@ -1,6 +1,7 @@
 package org.pastore.connection;
 
 import org.pastore.config.property.PasswordProtectedProperty;
+import org.pastore.response.Response;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -8,13 +9,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 
 public class Connection {
 
     private final SocketChannel clientChannel;
 
-    private final MessageReader messageReader;
+    private final IReader messageReader;
 
     private boolean needToBeClosed;
 
@@ -32,7 +32,7 @@ public class Connection {
 
     public Connection(final SocketChannel clientChannel,
                       final Selector selector,
-                      final MessageReader messageReader,
+                      final IReader messageReader,
                       final PasswordProtectedProperty passwordProtectedProperty) throws IOException {
         this.clientChannel = clientChannel;
         this.messageReader = messageReader;
@@ -42,7 +42,6 @@ public class Connection {
         this.loggedIn = ! passwordProtectedProperty.getValue();
         this.socketAddress = clientChannel.getRemoteAddress();
         this.currentDB = 0;
-
         this.closed = false;
     }
 
@@ -50,49 +49,25 @@ public class Connection {
         return this.needToBeClosed;
     }
 
-    public SocketChannel getClientChannel() {
-        return clientChannel;
-    }
-
-    public MessageReader getMessageReader() {
+    public IReader getMessageReader() {
         return messageReader;
     }
 
-    private void setResponse(String response) throws IOException {
-        if (response == null) {
-            this.response = null;
-        } else {
-            this.response = ByteBuffer.wrap((response + "\n").getBytes(StandardCharsets.UTF_8));
-        }
+    public void setResponse(Response response) throws IOException {
+        this.response = response.toBuffer();
         this.clientChannel.register(this.selector, SelectionKey.OP_WRITE);
         this.selector.wakeup();
     }
 
-    public void setOKResponse() throws IOException{
-        this.setSuccessResponse("OK");
-    }
-
-    public void setErrorResponse(String response) throws IOException {
-        this.setResponse("-" + response);
-    }
-
-    public void setSuccessResponse(String response) throws IOException {
-        this.setResponse("+" + response);
-    }
-
-    public void setErrorResponseAndClose(String response) throws IOException {
+    public void setResponseAndClose(Response response) throws IOException {
         this.needToBeClosed = true;
-        this.setErrorResponse(response);
-    }
-
-    public void setSuccessResponseAndClose(String response) throws IOException {
-        this.needToBeClosed = true;
-        this.setSuccessResponse(response);
+        this.setResponse(response);
     }
 
     public void closeConnection() throws IOException {
-        this.setResponse(null);
         this.setClosed();
+        this.clientChannel.register(this.selector, SelectionKey.OP_WRITE);
+        this.selector.wakeup();
     }
 
     public ByteBuffer getResponse() {

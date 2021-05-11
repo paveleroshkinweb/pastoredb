@@ -1,11 +1,11 @@
 package org.pastore.handle;
 
-import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.ClientException;
 import org.pastore.command.Command;
 import org.pastore.command.PropertyType;
 import org.pastore.command.option.OptionType;
 import org.pastore.connection.Connection;
-import org.pastore.db.Store;
+import org.pastore.db.store.Store;
 import org.pastore.db.value.*;
 import org.pastore.exception.client.command.InvalidOptionException;
 import org.pastore.handle.helper.DataHelper;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class SetCommandHandler implements IHandle {
 
     @Override
-    public Response handle(Command command, Connection connection, Store store) throws IOException, InvalidCommandException {
+    public Response handle(Command command, Connection connection, Store store) throws IOException, ClientException {
         String key = command.getProperties().get(PropertyType.KEY);
         if (store.keyExists(key)) {
             updateValue(key, command, connection, store);
@@ -30,7 +30,7 @@ public class SetCommandHandler implements IHandle {
         return new OkResponse();
     }
 
-    private void updateValue(String key, Command command, Connection connection, Store store) throws InvalidCommandException{
+    private void updateValue(String key, Command command, Connection connection, Store store) throws ClientException{
         if (command.getOptions().get(OptionType.EXPIRES) != null) {
             throw new InvalidOptionException(OptionType.EXPIRES);
         }
@@ -54,7 +54,7 @@ public class SetCommandHandler implements IHandle {
         }
     }
 
-    private void createNewValue(String key, Command command, Connection connection, Store store) throws InvalidCommandException, IOException{
+    private void createNewValue(String key, Command command, Connection connection, Store store) throws ClientException, IOException{
         String plainDataType = command.getOptions().get(OptionType.TYPE);
         DBValueType dbValueType = DBValueType.getTypeByName(plainDataType, DBValueType.STRING);
         String plainValue = command.getProperties().get(PropertyType.VALUE);
@@ -74,24 +74,24 @@ public class SetCommandHandler implements IHandle {
         store.addDBValue(key, value, expires);
     }
 
-    private DBValue createNewIntegerValue(String plainValue) throws InvalidCommandException {
+    private DBValue createNewIntegerValue(String plainValue) throws ClientException {
         Integer value = StrUtils.parseStringToInt(plainValue);
         DBValue dbValue = new IntegerDBValue(value);
         return dbValue;
     }
 
-    private DBValue createNewStringValue(String plainValue) throws InvalidCommandException {
+    private DBValue createNewStringValue(String plainValue) throws ClientException {
         DBValue dbValue = new StringDBValue(plainValue);
         return dbValue;
     }
 
-    private DBValue createNewIntListValue(String plainValue) throws InvalidCommandException {
+    private DBValue createNewIntListValue(String plainValue) throws ClientException {
         List<IntegerDBValue> intList = intListToDBList(StrUtils.parseStringToIntList(plainValue));
         DBValue value = new ListIntDBValue(intList);
         return value;
     }
 
-    private DBValue createNewStrListValue(String plainValue) throws InvalidCommandException{
+    private DBValue createNewStrListValue(String plainValue) throws ClientException {
         List<StringDBValue> strList = strListToDBList(StrUtils.parseStringToStrList(plainValue));
         DBValue value = new ListStrDBValue(strList);
         return value;

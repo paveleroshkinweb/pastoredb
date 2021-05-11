@@ -1,7 +1,7 @@
 package org.pastore.db.value;
 
 import org.pastore.command.CommandType;
-import org.pastore.exception.client.command.InvalidCommandException;
+import org.pastore.exception.client.ClientException;
 import org.pastore.exception.client.command.NotAllowedCommandException;
 
 public abstract class DBValue<T> {
@@ -37,31 +37,31 @@ public abstract class DBValue<T> {
         this.value = value;
     }
 
-    public void increment() throws InvalidCommandException {
+    public void increment() throws ClientException {
         throw new NotAllowedCommandException(CommandType.INCREMENT, this.dbValueType);
     }
 
-    public void push(String value) throws InvalidCommandException {
+    public void push(String value) throws ClientException {
         throw new NotAllowedCommandException(CommandType.PUSH, this.dbValueType);
     }
 
-    public String pop() throws InvalidCommandException {
+    public String pop() throws ClientException {
         throw new NotAllowedCommandException(CommandType.POP, this.dbValueType);
     }
 
-    public String shift() throws InvalidCommandException {
+    public String shift() throws ClientException {
         throw new NotAllowedCommandException(CommandType.SHIFT, this.dbValueType);
     }
 
-    public void unshift(String value) throws InvalidCommandException {
+    public void unshift(String value) throws ClientException {
         throw new NotAllowedCommandException(CommandType.UNSHIFT, this.dbValueType);
     }
 
-    public String size() throws InvalidCommandException {
+    public String size() throws ClientException {
         throw new NotAllowedCommandException(CommandType.SIZE, this.dbValueType);
     }
 
-    public String index(int index) throws InvalidCommandException {
+    public String index(int index) throws ClientException {
         throw new NotAllowedCommandException(CommandType.INDEX, this.dbValueType);
     }
 }

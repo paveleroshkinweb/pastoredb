@@ -4,7 +4,7 @@ public class MaxDatabaseException extends InvalidCommandException {
 
     private static final String MESSAGE = "The max database number is %i";
 
-    private static final int CODE = 9;
+    private static final int CODE = 6;
 
     public MaxDatabaseException(int number) {
         super(String.format(MESSAGE, number), CODE);

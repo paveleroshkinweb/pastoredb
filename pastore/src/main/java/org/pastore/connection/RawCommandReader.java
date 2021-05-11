@@ -1,6 +1,5 @@
 package org.pastore.connection;
 
-import org.apache.log4j.Logger;
 import org.pastore.exception.connection.ClientLeftException;
 import org.pastore.exception.connection.InvalidProtocolException;
 
@@ -10,7 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 
 
-public class MessageReader implements IReader {
+public class RawCommandReader implements IReader {
 
     private static final String PROTOCOL_ERR = "Client has to wait an answer from pastore before send next request using one connection";
 
@@ -18,7 +17,7 @@ public class MessageReader implements IReader {
 
     private static final int bufferSize = 8192;
 
-    private static final String delimiter = "\n";
+    private static final String delimiter = "\r\n";
 
     private final SocketChannel channel;
 
@@ -26,7 +25,7 @@ public class MessageReader implements IReader {
 
     private ByteBuffer readBuffer;
 
-    public MessageReader(final SocketChannel channel) {
+    public RawCommandReader(final SocketChannel channel) {
         this.channel = channel;
         this.unfinishedMessage = new StringBuilder();
         this.readBuffer = ByteBuffer.allocate(bufferSize);
@@ -55,7 +54,7 @@ public class MessageReader implements IReader {
             unfinishedMessage.append(newData);
             return null;
         }
-        if (delimiterIndex < newData.length() - 1) {
+        if (delimiterIndex < newData.length() - 2) {
             throw new InvalidProtocolException(PROTOCOL_ERR);
         }
         String result = unfinishedMessage.append(newData, 0, newData.length() - 1).toString();

@@ -49,7 +49,7 @@ public class UnencryptedServer extends Server {
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
-        this.database = new Database(this.getHistoryFile(), this.getDatabases());
+        this.database = new Database(this.getHistoryFile(), this.getDatabases(), HandlerFactory.getInstance());
         this.channel = ServerSocketChannel.open();
         this.serverSocket = this.channel.socket();
         this.serverSocket.setReuseAddress(true);
@@ -127,7 +127,6 @@ public class UnencryptedServer extends Server {
                 workers.execute(new Worker(this.database,
                                            connection,
                                            plainCommand,
-                                           HandlerFactory.getInstance(),
                                            this.middlewareChain));
             }
         } catch (InvalidProtocolException e) {

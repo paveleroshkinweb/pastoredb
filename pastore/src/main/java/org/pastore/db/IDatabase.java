@@ -1,6 +1,7 @@
 package org.pastore.db;
 
 import org.pastore.db.store.Store;
+import org.pastore.handle.factory.IHandlerFactory;
 
 import java.io.Closeable;
 
@@ -13,4 +14,6 @@ public interface IDatabase extends Closeable {
     default void shutdownTimers() {}
 
     int getStoresNumber();
+
+    IHandlerFactory getHandlerFactory();
 }

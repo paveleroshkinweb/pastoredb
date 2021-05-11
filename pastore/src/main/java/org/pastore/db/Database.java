@@ -4,6 +4,7 @@ import org.pastore.config.property.DatabasesProperty;
 import org.pastore.config.property.HistoryFileProperty;
 import org.pastore.db.job.ExpireJob;
 import org.pastore.db.store.Store;
+import org.pastore.handle.factory.IHandlerFactory;
 import org.pastore.utils.FSHelper;
 
 import java.util.ArrayList;
@@ -22,9 +23,12 @@ public class Database implements IDatabase {
 
     private DatabasesProperty databases;
 
-    public Database(HistoryFileProperty historyFile, DatabasesProperty databases) {
+    private IHandlerFactory handlerFactory;
+
+    public Database(HistoryFileProperty historyFile, DatabasesProperty databases, IHandlerFactory handlerFactory) {
         this.historyFile = historyFile;
         this.databases = databases;
+        this.handlerFactory = handlerFactory;
         this.init();
     }
 
@@ -36,6 +40,11 @@ public class Database implements IDatabase {
                 db.add(new Store(this, i));
             }
         }
+    }
+
+    @Override
+    public IHandlerFactory getHandlerFactory() {
+        return handlerFactory;
     }
 
     public Store getStoreByIndex(int index) {

@@ -11,16 +11,13 @@ public abstract class AbstractWorker implements Runnable {
 
     private String plainCommand;
 
-    private IHandlerFactory handlerFactory;
-
     private Middleware middleware;
 
     private IDatabase database;
 
-    public AbstractWorker(IDatabase database, Connection connection, String plainCommand, IHandlerFactory handlerFactory, Middleware middleware) {
+    public AbstractWorker(IDatabase database, Connection connection, String plainCommand, Middleware middleware) {
         this.connection = connection;
         this.plainCommand = plainCommand;
-        this.handlerFactory = handlerFactory;
         this.middleware = middleware;
         this.database = database;
     }
@@ -34,7 +31,7 @@ public abstract class AbstractWorker implements Runnable {
     }
 
     public IHandlerFactory getHandlerFactory() {
-        return handlerFactory;
+        return this.database.getHandlerFactory();
     }
 
     public Middleware getMiddleware() {

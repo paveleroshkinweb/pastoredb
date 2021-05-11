@@ -7,7 +7,6 @@ import org.pastore.db.IDatabase;
 import org.pastore.db.store.Store;
 import org.pastore.exception.client.ClientException;
 import org.pastore.handle.IHandle;
-import org.pastore.handle.factory.IHandlerFactory;
 import org.pastore.parse.CommandParser;
 import org.pastore.response.FailResponse;
 import org.pastore.response.Response;
@@ -19,8 +18,8 @@ public class Worker extends AbstractWorker {
 
     private static final Logger logger = Logger.getLogger(Worker.class);
 
-    public Worker(IDatabase database, Connection connection, String plainCommand, IHandlerFactory handlerFactory, Middleware middleware) {
-        super(database, connection, plainCommand, handlerFactory, middleware);
+    public Worker(IDatabase database, Connection connection, String plainCommand, Middleware middleware) {
+        super(database, connection, plainCommand, middleware);
     }
 
     @Override

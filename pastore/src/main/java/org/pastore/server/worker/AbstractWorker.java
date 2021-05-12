@@ -1,7 +1,7 @@
 package org.pastore.server.worker;
 
 import org.pastore.connection.Connection;
-import org.pastore.db.IDatabase;
+import org.pastore.db.AbstractDatabase;
 import org.pastore.handle.factory.IHandlerFactory;
 import org.pastore.server.middleware.Middleware;
 
@@ -13,9 +13,9 @@ public abstract class AbstractWorker implements Runnable {
 
     private Middleware middleware;
 
-    private IDatabase database;
+    private AbstractDatabase database;
 
-    public AbstractWorker(IDatabase database, Connection connection, String plainCommand, Middleware middleware) {
+    public AbstractWorker(AbstractDatabase database, Connection connection, String plainCommand, Middleware middleware) {
         this.connection = connection;
         this.plainCommand = plainCommand;
         this.middleware = middleware;
@@ -38,7 +38,7 @@ public abstract class AbstractWorker implements Runnable {
         return middleware;
     }
 
-    public IDatabase getDatabase() {
+    public AbstractDatabase getDatabase() {
         return database;
     }
 }

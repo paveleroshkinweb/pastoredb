@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 
 public enum CommandType {
 
-    GET("GET", new KeyFormat(), true),
-    SET("SET", new SetFormat(), true),
-    DELETE("DELETE", new KeyFormat(), true),
-    INCREMENT("INCREMENT", new KeyFormat(), true),
-    EXISTS("EXISTS", new KeyFormat(), true),
-    INDEX("INDEX", new KeyValueFormat(), true),
-    SIZE("SIZE", new KeyFormat(), true),
-    PUSH("PUSH", new KeyValueFormat(), true),
-    POP("POP", new KeyFormat(), true),
-    SHIFT("SHIFT", new KeyFormat(), true),
-    UNSHIFT("UNSHIFT", new KeyValueFormat(), true),
-    LOGIN("LOGIN", new KeyFormat(), false),
-    USE("USE", new KeyFormat(), true),
-    DB("DB", new PlainFormat(), true),
-    EXIT("EXIT", new PlainFormat(), false);
+    GET("GET", new KeyFormat(), true, false),
+    SET("SET", new SetFormat(), true, true),
+    DELETE("DELETE", new KeyFormat(), true, true),
+    INCREMENT("INCREMENT", new KeyFormat(), true, true),
+    EXISTS("EXISTS", new KeyFormat(), true, false),
+    INDEX("INDEX", new KeyValueFormat(), true, false),
+    SIZE("SIZE", new KeyFormat(), true, false),
+    PUSH("PUSH", new KeyValueFormat(), true, true),
+    POP("POP", new KeyFormat(), true, true),
+    SHIFT("SHIFT", new KeyFormat(), true, false),
+    UNSHIFT("UNSHIFT", new KeyValueFormat(), true, true),
+    LOGIN("LOGIN", new KeyFormat(), false, false),
+    USE("USE", new KeyFormat(), true, false),
+    DB("DB", new PlainFormat(), true, false),
+    EXIT("EXIT", new PlainFormat(), false, false);
 
     private final String name;
 
@@ -30,14 +30,17 @@ public enum CommandType {
 
     private boolean loginRequired;
 
+    private boolean isSerializable;
+
     private static final Map<String, CommandType> types = Arrays.stream(CommandType.values()).collect(
             Collectors.toMap(CommandType::getName, command -> command)
     );
 
-    CommandType(final String name, final Format format, final boolean loginRequired) {
+    CommandType(final String name, final Format format, final boolean loginRequired, final boolean isSerializable) {
         this.name = name;
         this.format = format;
         this.loginRequired = loginRequired;
+        this.isSerializable = isSerializable;
     }
 
     public boolean isLoginRequired() {
@@ -54,5 +57,9 @@ public enum CommandType {
 
     public static CommandType getCommandByName(final String name) {
         return types.get(name);
+    }
+
+    public boolean isSerializable() {
+        return isSerializable;
     }
 }

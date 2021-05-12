@@ -14,6 +14,7 @@ public class AuthMiddleware extends Middleware {
         if (! connection.isLoggedIn() && command.getCommandType().isLoginRequired()) {
             throw new AuthRequiredException();
         }
+        command.setStoreNumber(connection.getCurrentDB());
         return true;
     }
 }

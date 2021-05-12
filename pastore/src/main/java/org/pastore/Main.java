@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.pastore.cli.CLI;
 import org.pastore.cli.CLIOption;
 import org.pastore.config.property.ServerTypeProperty;
+import org.pastore.hook.ShutdownHook;
 import org.pastore.load.Loader;
 import org.pastore.logging.LoggerLoader;
 import org.pastore.server.Server;
@@ -23,6 +24,7 @@ public class Main {
             ServerTypeProperty serverType = new ServerTypeProperty();
 
             try (Server server = ServerFactory.getServer(serverType.getValue())) {
+                Runtime.getRuntime().addShutdownHook(new ShutdownHook(server));
                 server.listen();
             }
         } catch (Exception e) {

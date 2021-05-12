@@ -98,6 +98,10 @@ public class Connection {
         this.closed = true;
     }
 
+    public SocketChannel getClientChannel() {
+        return clientChannel;
+    }
+
     @Override
     public String toString() {
         return "Connection{" + "address=" + this.socketAddress + '}';

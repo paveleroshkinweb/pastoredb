@@ -2,17 +2,20 @@ package org.pastore.command;
 
 import org.pastore.command.option.OptionType;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class Command {
+public class Command implements Serializable {
 
     private CommandType commandType;
 
-    private String plainCommand;
+    private transient String plainCommand;
 
     private Map<PropertyType, String> properties;
 
     private Map<OptionType, String> options;
+
+    private int storeNumber;
 
     public Command(CommandType commandType,
                    String plainCommand,
@@ -22,6 +25,14 @@ public class Command {
         this.plainCommand = plainCommand;
         this.properties = properties;
         this.options = options;
+    }
+
+    public int getStoreNumber() {
+        return storeNumber;
+    }
+
+    public void setStoreNumber(int storeNumber) {
+        this.storeNumber = storeNumber;
     }
 
     public CommandType getCommandType() {

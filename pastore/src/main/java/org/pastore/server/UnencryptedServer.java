@@ -5,10 +5,12 @@ import org.pastore.connection.Connection;
 import org.pastore.connection.IReader;
 import org.pastore.connection.RawCommandReader;
 import org.pastore.db.Database;
-import org.pastore.db.IDatabase;
+import org.pastore.db.AbstractDatabase;
 import org.pastore.exception.connection.ConnectionException;
 import org.pastore.exception.connection.InvalidProtocolException;
 import org.pastore.handle.factory.HandlerFactory;
+import org.pastore.history.AbstractHistoryHandler;
+import org.pastore.history.HistoryHandler;
 import org.pastore.response.FailResponse;
 import org.pastore.server.middleware.AuthMiddleware;
 import org.pastore.server.middleware.Middleware;
@@ -45,11 +47,14 @@ public class UnencryptedServer extends Server {
 
     private ExecutorService workers = Executors.newSingleThreadExecutor();
 
-    private IDatabase database;
+    private AbstractDatabase database;
+
+    private AbstractHistoryHandler historyHandler;
 
     public UnencryptedServer(ServerBuilder serverBuilder) throws IOException {
         super(serverBuilder);
-        this.database = new Database(this.getHistoryFile(), this.getDatabases(), HandlerFactory.getInstance());
+        this.historyHandler = new HistoryHandler(this.getHistoryFile());
+        this.database = new Database(historyHandler, this.getDatabases(), HandlerFactory.getInstance());
         this.channel = ServerSocketChannel.open();
         this.serverSocket = this.channel.socket();
         this.serverSocket.setReuseAddress(true);
@@ -175,18 +180,27 @@ public class UnencryptedServer extends Server {
         this.closeChannel(channel);
     }
 
+
+
     public void close() {
-        this.connections.keySet().forEach(this::closeConnection);
+        this.connections.keySet().forEach(this::closeChannel);
+
         try {
             this.channel.close();
         } catch (IOException e) {
             logger.error(e);
         }
+
         try {
             this.database.close();
         } catch (IOException e) {
             logger.error(e);
         }
 
+        try {
+            this.historyHandler.close();
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 }

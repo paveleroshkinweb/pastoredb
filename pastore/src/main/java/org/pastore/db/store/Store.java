@@ -1,8 +1,12 @@
 package org.pastore.db.store;
 
+import org.pastore.command.Command;
+import org.pastore.command.CommandType;
+import org.pastore.command.PropertyType;
 import org.pastore.db.AbstractDatabase;
 import org.pastore.db.value.DBValue;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,8 +49,27 @@ public class Store {
         }
     }
 
+    public void removeExpiredKey(String key) {
+        DBValue value = this.getDBValueByKey(key);
+        if (value != null && System.currentTimeMillis() >= value.getExpires()) {
+            this.removeValueByKey(key);
+            this.getDatabase().getHistoryHandler().writeCommand(createDeleteCommand(key));
+        }
+    }
+
+    private static Command createDeleteCommand(String key) {
+        Map<PropertyType, String> properties = new HashMap<>();
+        properties.put(PropertyType.KEY, key);
+        Command command = new Command(CommandType.DELETE, null, properties, null);
+        return command;
+    }
+
     public void setExpires(String key, int expires) {
-        database.setExpires(key, expires, this.number);
+        DBValue value = this.getDBValueByKey(key);
+        if (value != null) {
+            value.setExpires(expires);
+            database.setExpires(key, expires, this.number);
+        }
     }
 
     public int getNumber() {

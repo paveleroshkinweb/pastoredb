@@ -30,6 +30,7 @@ public class HandlerFactory implements IHandlerFactory {
         this.handlers.put(CommandType.GET, new GetCommandHandler());
         this.handlers.put(CommandType.DELETE, new DeleteCommandHandler());
         this.handlers.put(CommandType.LOGIN, new LoginCommandHandler());
+        this.handlers.put(CommandType.EXPIRES, new ExpiresCommandHandler());
     }
 
     public static IHandlerFactory getInstance() {

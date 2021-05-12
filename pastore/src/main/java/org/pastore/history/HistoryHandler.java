@@ -1,6 +1,8 @@
 package org.pastore.history;
 
+import org.apache.log4j.Logger;
 import org.pastore.command.Command;
+import org.pastore.command.option.OptionType;
 import org.pastore.config.property.HistoryFileProperty;
 import org.pastore.exception.history.FileLockedException;
 import org.pastore.exception.history.HistoryException;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryHandler extends AbstractHistoryHandler {
+
+    private static final Logger logger = Logger.getLogger(HistoryHandler.class);
 
     private ObjectOutputStream outputStream;
 
@@ -45,6 +49,10 @@ public class HistoryHandler extends AbstractHistoryHandler {
 
     @Override
     public void writeCommand(Command command) {
+        // remove all fields that should not be serialized
+        if (command.getOptions() != null) {
+            command.getOptions().remove(OptionType.EXPIRES);
+        }
         try {
             this.outputStream.writeObject(command);
         } catch (IOException e) {
@@ -65,7 +73,7 @@ public class HistoryHandler extends AbstractHistoryHandler {
                 }
             }
         } catch (IOException e) {
-            throw new HistoryException("Can't read history file!", e);
+            logger.error("Can't read history file!", e);
         }
         return commands;
 

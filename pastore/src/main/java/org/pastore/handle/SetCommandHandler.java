@@ -31,12 +31,10 @@ public class SetCommandHandler implements IHandle {
     }
 
     private void updateValue(String key, Command command, Connection connection, Store store) throws ClientException{
-        if (command.getOptions().get(OptionType.EXPIRES) != null) {
-            throw new InvalidOptionException(OptionType.EXPIRES);
-        }
         if (command.getOptions().get(OptionType.TYPE) != null) {
             throw new InvalidOptionException(OptionType.TYPE);
         }
+        Integer expires = DataHelper.transformExpires(command.getOptions().get(OptionType.EXPIRES));
         String plainValue = command.getProperties().get(PropertyType.VALUE);
         DBValue dbValue = store.getDBValueByKey(key);
         DBValueType type = dbValue.getDbValueType();
@@ -51,6 +49,9 @@ public class SetCommandHandler implements IHandle {
         } else {
             List<StringDBValue> strList = strListToDBList(StrUtils.parseStringToStrList(plainValue));
             dbValue.setValue(strList);
+        }
+        if (expires != null) {
+            store.setExpires(key, expires);
         }
     }
 
@@ -104,4 +105,5 @@ public class SetCommandHandler implements IHandle {
     private List<StringDBValue> strListToDBList(List<String> list) {
         return list.stream().map(StringDBValue::new).collect(Collectors.toList());
     }
+
 }

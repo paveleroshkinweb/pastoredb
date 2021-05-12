@@ -4,15 +4,20 @@ import org.pastore.command.CommandType;
 import org.pastore.exception.client.ClientException;
 import org.pastore.exception.client.command.NotAllowedCommandException;
 
+import java.util.concurrent.TimeUnit;
+
 public abstract class DBValue<T> {
 
     private T value;
 
     private DBValueType dbValueType;
 
+    private long expires;
+
     public DBValue(T value, DBValueType dbValueType) {
         this.value = value;
         this.dbValueType = dbValueType;
+        this.expires = -1;
     }
 
     public T getValue() {
@@ -37,6 +42,14 @@ public abstract class DBValue<T> {
 
     public void increment() throws ClientException {
         throw new NotAllowedCommandException(CommandType.INCREMENT, this.dbValueType);
+    }
+
+    public void setExpires(int seconds) {
+        this.expires = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(seconds);
+    }
+
+    public long getExpires() {
+        return expires;
     }
 
     public void push(String value) throws ClientException {

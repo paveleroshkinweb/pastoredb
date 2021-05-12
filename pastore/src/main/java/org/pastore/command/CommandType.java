@@ -22,7 +22,8 @@ public enum CommandType {
     LOGIN("LOGIN", new KeyFormat(), false, false),
     USE("USE", new KeyFormat(), true, false),
     DB("DB", new PlainFormat(), true, false),
-    EXIT("EXIT", new PlainFormat(), false, false);
+    EXIT("EXIT", new PlainFormat(), false, false),
+    EXPIRES("EXPIRES", new KeyValueFormat(), true, false);
 
     private final String name;
 

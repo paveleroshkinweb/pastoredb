@@ -15,6 +15,6 @@ public class ExpireJob implements Runnable {
 
     @Override
     public void run() {
-        store.removeValueByKey(key);
+        store.removeExpiredKey(key);
     }
 }

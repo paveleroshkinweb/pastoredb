@@ -2,7 +2,6 @@ package org.pastore.history;
 
 import org.apache.log4j.Logger;
 import org.pastore.command.Command;
-import org.pastore.command.option.OptionType;
 import org.pastore.config.property.HistoryFileProperty;
 import org.pastore.exception.history.FileLockedException;
 import org.pastore.exception.history.HistoryException;
@@ -49,12 +48,8 @@ public class HistoryHandler extends AbstractHistoryHandler {
 
     @Override
     public void writeCommand(Command command) {
-        // remove all fields that should not be serialized
-        if (command.getOptions() != null) {
-            command.getOptions().remove(OptionType.EXPIRES);
-        }
         try {
-            this.outputStream.writeObject(command);
+            this.outputStream.writeObject(command.toHistory());
         } catch (IOException e) {
             throw new HistoryException("Can't write command to file", e);
         }

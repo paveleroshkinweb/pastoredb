@@ -8,3 +8,6 @@
 **/pastore-dump.pdb
 **/pastore-history.phist
 **/notes/
+
+
+**/__pycache__

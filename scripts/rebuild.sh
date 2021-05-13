@@ -1,5 +1,3 @@
-# make a new build, move it where it says, forcely remove previos if it's already exist, change right for folder
-# pastore-1.0-jar-with-dependencies.jar
 if [ $# -ne 1 ]; then
     echo "Please run build script with a folder path as an argument, for example\nsudo ./rebuild.sh /home/pavel/pastore"
     exit 1
